@@ -89,6 +89,13 @@ html {
 }
 ```
 
+```.sh
+# index.html
+<head>
+    <link rel="favicon" type="image/x-icon" href="Content-Type: image/x-icon;ICogQGF1dGhvciBSZW7DqSBOeWZmZW5lZ....">
+</head>
+```
+
 ## Build from source
 
 Requirements:
