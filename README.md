@@ -79,6 +79,16 @@ ICogQGRhdGUgMjAyMy0xMi0yOQ==
 ICo...
 ```
 
+Use the output data directly in various software design tasks:
+
+```.sh
+# styles.css
+
+html {
+    background-image: url("data:image/png;base64,ICogQGF1dGhvciBSZW7DqSBOeWZmZW5lZ....");
+}
+```
+
 ## Build from source
 
 Requirements:
