@@ -2,10 +2,10 @@
 
 Base64 encode/decode CLI in C++.
 
-- [Usage](/#usage)
-- [Examples](/#examples)
-- [Build from source](/#build_from_source)
-- [Acknowledgments](/#acknowledgments)
+- [Usage](https://github.com/nathanjhood/base64/tree/main#usage)
+- [Examples](https://github.com/nathanjhood/base64/tree/main#examples)
+- [Build from source](https://github.com/nathanjhood/base64/tree/main#build-from-source)
+- [Acknowledgments](https://github.com/nathanjhood/base64/tree/main#acknowledgments)
 
 ## Usage
 
