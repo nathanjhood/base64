@@ -128,11 +128,48 @@ int main(int argc, char *argv[])
         out.push_back(*i);
       }
 
-      // if(args[0] == "--encode") { /** Log encode output */} else
-      // if(args[0] == "--decode") { /** Log decode output */}
 
-      std::cout << /**"base64 encode: " << */ encodedData << std::endl;
-      // std::cout << "base64 decode: " << out << std::endl;
+      enum modeSwitcher {
+        INPUT,
+        ENCODE,
+        DECODE,
+        OUTPUT // Would rather swap for a 'DIFF' mode...
+      };
+
+      const modeSwitcher mode = ENCODE;
+
+      switch (mode)
+      {
+      case INPUT:
+        for (auto x : myData)
+          std::cout << x;
+        std::cout << std::endl;
+        break;
+
+      case ENCODE:
+        for (auto x : encodedData)
+          std::cout << x;
+        std::cout << std::endl;
+        break;
+
+      case DECODE:
+        for (auto x : decodedData)
+          std::cout << x;
+        std::cout << std::endl;
+        break;
+
+      case OUTPUT:
+        for (auto x : out)
+          std::cout << x;
+        std::cout << std::endl;
+        break;
+
+      default:
+        for (auto x : encodedData)
+          std::cout << x;
+        std::cout << std::endl;
+        break;
+      }
 
       // Destroy all data
       myData.clear();
