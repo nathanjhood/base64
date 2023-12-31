@@ -168,12 +168,17 @@ $ git clone https://github.com/nathanjhood/base64.git
 $ cd base64
 ```
 
-Build the library and executable with CMake:
+Configure the library and executable with CMake:
 
 ```.sh
-$ cmake -S . -B build
+$ cmake -S . -B ./build
 ```
 *NOTE: The '-S .' arg tells CMake to start from the current directory. The -B arg tells CMake to place it's output in the 'build' directory (which you can of course change if you wish).*
+
+Build it (replace with ```make``` or whichever generator you prefer):
+```
+$ ninja ./build
+```
 
 Try running the built executable:
 
