@@ -20,8 +20,6 @@ Will parse almost any file type the OS can handle:
 ```.sh
 $ base64 icon__32x32.png
 
-base64 encode/decode tool
-
 
 file: icon__32x32.png
 
@@ -40,8 +38,6 @@ Accepts multiple files as arguments in a single command:
 
 ```.sh
 $ base64 package.json include/base64/base64.h
-
-base64 encode/decode tool
 
 
 file: package.json
