@@ -45,9 +45,11 @@ namespace Base64
 
 typedef unsigned char BYTE;
 
-std::string Encode(const Base64::BYTE* buf, unsigned int bufLen);
-std::vector<Base64::BYTE> Decode(const std::string& encoded_string);
+std::string Encode(const std::string& s);                           // overload
+std::string Encode(const Base64::BYTE* buf, unsigned int bufLen);   // definition
 
-// static const char *Base64::copyright;
+
+std::vector<Base64::BYTE> Decode(const std::string& encoded_string); // definition
+
 }
 #endif // BASE64_H_
