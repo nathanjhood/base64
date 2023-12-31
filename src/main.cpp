@@ -35,17 +35,16 @@
 
 int main(int argc, char *argv[])
 {
-  std::cout << std::endl;
-  std::cout << "base64 encode/decode tool" << std::endl;
-  std::cout << std::endl;
-
   // Parse command-line arguments
-  const std::vector<std::string> args(argv + 1, argv + argc);
+  std::vector<std::string> args(argv + 1, argv + argc);
 
   // if(
   //     (args[0].data() == "-h") ||
   //     (args[0].data() == "--help")
   //   ) {
+  //   std::cout << std::endl;
+  //   std::cout << "base64 encode/decode tool" << std::endl;
+  //   std::cout << std::endl;
   //   std::cout << "usage: base64 [OPTION]... [FILE]..." << std::endl;
   //   std::cout << std::endl;
   //   std::cout << Base64::copyright << std::endl;
@@ -78,13 +77,16 @@ int main(int argc, char *argv[])
   // Read files passed as arguments on the command line
   for (auto i = 0; i < args.size(); ++i) {
 
+    // while (args[i].data() == "--verbose") {
+    //   std::cout << std::endl;
+    //   std::cout << "file: " << args[i].data() << std::endl;
+    //   std::cout << std::endl;
+    //   args[i].erase(i);
+    // }
+
     std::string line;
     std::ifstream file;
     auto filename = args[i].data();
-
-    std::cout << std::endl;
-    std::cout << "file: " << filename << std::endl;
-    std::cout << std::endl;
 
     // args.data() could be "package.json" or so...
     file.open(filename);
@@ -97,7 +99,6 @@ int main(int argc, char *argv[])
 
     // Read file line by line
     while (std::getline(file, line)) {
-      // std::cout << line << std::endl;
 
       // Store the data...
       std::vector<Base64::BYTE> myData;
@@ -110,8 +111,14 @@ int main(int argc, char *argv[])
       // Encode it...
       std::string encodedData = Base64::Encode(&myData[0], myData.size());
 
+      // // TODO: Encode it to a vector in contiquous memory...
+      // std::vector<Base64::BYTE> encodedData = Base64::Encode(&myData[0], myData.size());
+
       // Decode it...
-      std::vector<Base64::BYTE> decodedData = Base64::Decode(encodedData);
+      std::vector<Base64::BYTE> decodedData = Base64::Decode(encodedData.data());
+
+      // // TODO: Decode it to a vector in contiquous memory...
+      // std::vector<Base64::BYTE> decodedData = Base64::Decode(encodedData);
 
       // Pass it back out...
       std::string out;
