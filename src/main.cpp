@@ -179,6 +179,7 @@ int main(int argc, char *argv[])
     }
 
     // Close the file
+    filename = nullptr;
     file.close();
 
     std::cout << std::endl;
