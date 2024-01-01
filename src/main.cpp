@@ -27,7 +27,7 @@
  *
  */
 
-#include <base64/base64.h>
+#include "base64/base64.h"
 #include <algorithm>
 #include <fstream>
 #include <iostream>
@@ -38,51 +38,20 @@ int main(int argc, char *argv[])
   // Parse command-line arguments
   std::vector<std::string> args(argv + 1, argv + argc);
 
-  // if(
-  //     (args[0].data() == "-h") ||
-  //     (args[0].data() == "--help")
-  //   ) {
-  //   std::cout << std::endl;
-  //   std::cout << "base64 encode/decode tool" << std::endl;
-  //   std::cout << std::endl;
-  //   std::cout << "usage: base64 [OPTION]... [FILE]..." << std::endl;
-  //   std::cout << std::endl;
-  //   std::cout << Base64::copyright << std::endl;
-  //   std::cout << std::endl;
-  //   return EXIT_SUCCESS;
-  // } else if(
-  //   (args[0].data() == "-v") ||
-  //   (args[0].data() == "--version")
-  //   ) {
-  //   std::cout << "base64 v0.0.0" << std::endl;
-  //   std::cout << std::endl;
-  //   return EXIT_SUCCESS;
-  // }
-
   if (args.size() < 1) {
-
-    const char* msg = "base64: missing input string argument!\n"
-                      "usage: base64 <input_string> ...\n";
-    std::cerr << msg;
+    std::cerr << "base64: missing input string argument!" << std::endl;
+    std::cerr << "usage: base64 <input_string> ..." << std::endl;
     return EXIT_FAILURE;
 
-  } else if (args.size() > 64) {
-
-    const char* msg = "base64: too many input string arguments!\n"
-                      "usage: base64 <input_string> ...\n";
-    throw std::runtime_error(msg);
+  }
+  if (args.size() > 64) {
+    std::cerr << "base64: too many input string arguments!" << std::endl;
+    std::cerr << "usage: base64 <input_string> ..." << std::endl;
     return EXIT_FAILURE;
   }
 
   // Read files passed as arguments on the command line
   for (auto i = 0; i < args.size(); ++i) {
-
-    // while (args[i].data() == "--verbose") {
-    //   std::cout << std::endl;
-    //   std::cout << "file: " << args[i].data() << std::endl;
-    //   std::cout << std::endl;
-    //   args[i].erase(i);
-    // }
 
     std::string line;
     std::ifstream file;
@@ -100,25 +69,16 @@ int main(int argc, char *argv[])
     // Read file line by line
     while (std::getline(file, line)) {
 
-      // Store the data...
-      std::vector<Base64::BYTE> myData;
+      std::vector<base64::BYTE> myData;
 
       for (auto i = line.begin(); i != line.end(); i++)
       {
         myData.push_back(*i);
       }
 
-      // Encode it...
-      std::string encodedData = Base64::Encode(&myData[0], myData.size());
+      std::string encodedData = base64::encode(&myData[0], myData.size());
 
-      // // TODO: Encode it to a vector in contiquous memory...
-      // std::vector<Base64::BYTE> encodedData = Base64::Encode(&myData[0], myData.size());
-
-      // Decode it...
-      std::vector<Base64::BYTE> decodedData = Base64::Decode(encodedData.data());
-
-      // // TODO: Decode it to a vector in contiquous memory...
-      // std::vector<Base64::BYTE> decodedData = Base64::Decode(encodedData);
+      std::vector<base64::BYTE> decodedData = base64::decode(encodedData);
 
       // Pass it back out...
       std::string out;
@@ -133,7 +93,7 @@ int main(int argc, char *argv[])
         INPUT,
         ENCODE,
         DECODE,
-        OUTPUT // Would rather swap for a 'DIFF' mode...
+        OUTPUT
       };
 
       const modeSwitcher mode = ENCODE;
