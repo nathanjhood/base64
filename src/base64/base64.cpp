@@ -82,16 +82,16 @@ std::string encode(const base64::BYTE* buf, unsigned int bufLen) {
   std::string out;
   int i = 0;
   int j = 0;
-  base64::BYTE octet[3];
+  base64::BYTE stream[3];
   base64::BYTE index[4];
 
   while (bufLen--) {
-    octet[i++] = *(buf++);
+    stream[i++] = *(buf++);
     if (i == 3) {
-      index[0] = ( octet[0] & 0xfc) >> 2;
-      index[1] = ((octet[0] & 0x03) << 4) + ((octet[1] & 0xf0) >> 4);
-      index[2] = ((octet[1] & 0x0f) << 2) + ((octet[2] & 0xc0) >> 6);
-      index[3] =   octet[2] & 0x3f;
+      index[0] = ( stream[0] & 0xfc) >> 2;
+      index[1] = ((stream[0] & 0x03) << 4) + ((stream[1] & 0xf0) >> 4);
+      index[2] = ((stream[1] & 0x0f) << 2) + ((stream[2] & 0xc0) >> 6);
+      index[3] =   stream[2] & 0x3f;
 
       for(i = 0; (i <4) ; i++)
         out += base64::alphabet[index[i]];
@@ -102,12 +102,12 @@ std::string encode(const base64::BYTE* buf, unsigned int bufLen) {
   if (i)
   {
     for(j = i; j < 3; j++)
-      octet[j] = '\0';
+      stream[j] = '\0';
 
-    index[0] = ( octet[0] & 0xfc) >> 2;
-    index[1] = ((octet[0] & 0x03) << 4) + ((octet[1] & 0xf0) >> 4);
-    index[2] = ((octet[1] & 0x0f) << 2) + ((octet[2] & 0xc0) >> 6);
-    index[3] =   octet[2] & 0x3f;
+    index[0] = ( stream[0] & 0xfc) >> 2;
+    index[1] = ((stream[0] & 0x03) << 4) + ((stream[1] & 0xf0) >> 4);
+    index[2] = ((stream[1] & 0x0f) << 2) + ((stream[2] & 0xc0) >> 6);
+    index[3] =   stream[2] & 0x3f;
 
     for (j = 0; (j < i + 1); j++)
       out += base64::alphabet[index[j]];
@@ -136,7 +136,7 @@ static std::vector<base64::BYTE> _decode(const Str& encoded_string) {
   int in_ = 0;
   int in_len = encoded_string.size();
   base64::BYTE index[4];
-  base64::BYTE octet[3];
+  base64::BYTE stream[3];
 
   while (in_len-- && (  encoded_string[in_] != '=') && is_base64(encoded_string[in_])) {
     index[i++] = encoded_string[in_]; in_++;
@@ -144,12 +144,12 @@ static std::vector<base64::BYTE> _decode(const Str& encoded_string) {
       for (i = 0; i < 4; i++)
         index[i] = base64::alphabet.find(index[i]);
 
-      octet[0] = ( index[0]        << 2) + ((index[1] & 0x30) >> 4);
-      octet[1] = ((index[1] & 0xf) << 4) + ((index[2] & 0x3c) >> 2);
-      octet[2] = ((index[2] & 0x3) << 6) +   index[3];
+      stream[0] = ( index[0]        << 2) + ((index[1] & 0x30) >> 4);
+      stream[1] = ((index[1] & 0xf) << 4) + ((index[2] & 0x3c) >> 2);
+      stream[2] = ((index[2] & 0x3) << 6) +   index[3];
 
       for (i = 0; (i < 3); i++)
-          out.push_back(octet[i]);
+          out.push_back(stream[i]);
       i = 0;
     }
   }
@@ -161,11 +161,11 @@ static std::vector<base64::BYTE> _decode(const Str& encoded_string) {
     for (j = 0; j < 4; j++)
       index[j] = base64::alphabet.find(index[j]);
 
-    octet[0] = ( index[0]        << 2) + ((index[1] & 0x30) >> 4);
-    octet[1] = ((index[1] & 0xf) << 4) + ((index[2] & 0x3c) >> 2);
-    octet[2] = ((index[2] & 0x3) << 6) +   index[3];
+    stream[0] = ( index[0]        << 2) + ((index[1] & 0x30) >> 4);
+    stream[1] = ((index[1] & 0xf) << 4) + ((index[2] & 0x3c) >> 2);
+    stream[2] = ((index[2] & 0x3) << 6) +   index[3];
 
-    for (j = 0; (j < i - 1); j++) out.push_back(octet[j]);
+    for (j = 0; (j < i - 1); j++) out.push_back(stream[j]);
   }
 
   return out;

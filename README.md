@@ -4,7 +4,10 @@ Base64 encode/decode CLI in C++.
 
 - [Usage](https://github.com/nathanjhood/base64/tree/main#usage)
 - [Examples](https://github.com/nathanjhood/base64/tree/main#examples)
+- [About](https://github.com/nathanjhood/base64/tree/main#about)
 - [Build from source](https://github.com/nathanjhood/base64/tree/main#build-from-source)
+- [Additional support for NodeJs package managers](https://github.com/nathanjhood/base64#additional-support-for-nodejs-package-managers)
+- [Coming Soon](https://github.com/nathanjhood/base64/tree/main#coming-soon)
 - [Acknowledgments](https://github.com/nathanjhood/base64/tree/main#acknowledgments)
 
 ## Usage
@@ -107,11 +110,11 @@ alphabet.
 +---------------+---------------+---------------+
 | <     1     > | <     2     > | <     3     > | 3 groups (8 bit)
 +---------------+---------------+---------------+
-|7 6 5 4 3 2 1 0|7 6 5 4 3 2 1 0|7 6 5 4 3 2 1 0| Octets (24 bits)
+|7 6 5 4 3 2 1 0|7 6 5 4 3 2 1 0|7 6 5 4 3 2 1 0| Stream (24 bits)
 +-----------+---+-------+-------+---+-----------+
 |<    1    >|<    2    >|<    3    >|<    4    >| 4 groups (6 bit)
 +-----------+-----------+-----------+-----------+
-|5 4 3 2 1 0|5 4 3 2 1 0|5 4 3 2 1 0|5 4 3 2 1 0| Index (24 bits)
+|5 4 3 2 1 0|5 4 3 2 1 0|5 4 3 2 1 0|5 4 3 2 1 0| Index  (24 bits)
 
                                      <=========>  4th character
                          <=========>              3rd character
@@ -152,6 +155,49 @@ output string.
       14 O           31 f            48 w         (pad) =
       15 P           32 g            49 x
       16 Q           33 h            50 y
+```
+
+```.txt
+
+BASE64 ENCODE:
+
+  <===========>                                   1st character
+                  <===========>                   2nd character
+                                  <===========>   3rd character
++---------------+---------------+---------------+
+| <     1     > | <     2     > | <     3     > | 3 groups (8 bit)
++---------------+---------------+---------------+
+|7 6 5 4 3 2 1 0|7 6 5 4 3 2 1 0|7 6 5 4 3 2 1 0| Stream (24 bits)
++-----------+---+-------+-------+---+-----------+
+|<    1    >|<    2    >|<    3    >|<    4    >| 4 groups (6 bit)
++-----------+-----------+-----------+-----------+
+|5 4 3 2 1 0|5 4 3 2 1 0|5 4 3 2 1 0|5 4 3 2 1 0| Index (24 bits)
+
+                                     <=========>  4th character
+                         <=========>              3rd character
+             <=========>                          2nd character
+ <=========>                                      1st character
+
+
+BASE64 DECODE:
+
+ <=========>                                      1st character
+             <=========>                          2nd character
+                         <=========>              3rd character
+                                     <=========>  4th character
++-----------+-----------+-----------+-----------+
+|<    1    >|<    2    >|<    3    >|<    4    >| 4 groups (6 bit)
++-----------+-----------+-----------+-----------+
+|5 4 3 2 1 0|5 4 3 2 1 0|5 4 3 2 1 0|5 4 3 2 1 0| Index (24 bits)
++-----------+---+-------+-------+---+-----------+
+| <     1     > | <     2     > | <     3     > | 3 groups (8 bit)
++---------------+---------------+---------------+
+|7 6 5 4 3 2 1 0|7 6 5 4 3 2 1 0|7 6 5 4 3 2 1 0| Stream (24 bits)
+
+                                  <===========>   3rd character
+                  <===========>                   2nd character
+  <===========>                                   1st character
+
 ```
 
 ## Build from source
