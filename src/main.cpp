@@ -45,6 +45,7 @@ enum modeSwitcher {
 
 int main(int argc, char *argv[])
 {
+  // TODO: Parse args for flags such as '--version', '--mode'...
   // Parse command-line arguments...
   std::vector<std::string> args(argv + 1, argv + argc);
 
@@ -88,15 +89,15 @@ int main(int argc, char *argv[])
         myData.push_back(*i);
       }
 
-      // if (mode >= 1) {
-        // Encode it...
-        std::string encodedData = base64::encode(&myData[0], myData.size());
+      // TODO: only if (mode >= 1) {
+      // Encode it...
+      std::string encodedData = base64::encode(&myData[0], myData.size());
 
-      // if (mode >= 2) {
-        // Decode it...
-        std::vector<base64::BYTE> decodedData = base64::decode(myData);
+      // TODO: only if (mode >= 2) {
+      // Decode it...
+      std::vector<base64::BYTE> decodedData = base64::decode(myData);
 
-      // if (mode >= 3) {
+      // TODO: only if (mode >= 3) {
       // Check for any differences...
       std::vector<base64::BYTE> diffData = base64::decode(encodedData);
       std::string diffedOut;
@@ -110,7 +111,7 @@ int main(int argc, char *argv[])
         };
       }
 
-      // if (mode >= 4) {
+      // TODO: only if (mode >= 4) {
       // Pass it back out...
       std::string out;
       for (auto i = decodedData.begin(); i != decodedData.end(); i++)
@@ -118,7 +119,7 @@ int main(int argc, char *argv[])
         out.push_back(*i);
       }
 
-      // Output mode
+      // TODO: Output mode
       switch (mode)
       {
       case base64::modeSwitcher::INPUT:
@@ -160,14 +161,16 @@ int main(int argc, char *argv[])
       }
 
       // Destroy all data...
-      out.clear();
+      out.clear();                            // TODO: only if (mode >= 4)
       // }
-      decodedData.clear();
+      diffedOut.clear(); diffedOut.clear();   // TODO: only if (mode >= 3)
       // }
-      encodedData.clear();
+      decodedData.clear();                    // TODO: only if (mode >= 2)
       // }
-      myData.clear();
-      // } // mode comparison
+      encodedData.clear();                    // TODO: only if (mode >= 1)
+      // }
+      myData.clear();                         // TODO: only if (mode >= 1)
+      // }                                    // TODO: mode comparison
     }
 
     // Close the file.
