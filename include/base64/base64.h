@@ -33,21 +33,85 @@
 #include <vector>
 #include <string>
 
+/**
+ * @brief The base64 namespace.
+ *
+ */
 namespace base64 {
 
+/**
+ * @brief The base64 data type.
+ *
+ */
 typedef unsigned char BYTE;
 
-std::string encode(const base64::BYTE* buf, unsigned int bufLen);                 // definitions
+/**
+ * @brief Returns a base64-encoded std::string from an array (or std::vector) of unsigned chars.
+ *
+ * @param buf
+ * @param bufLen
+ * @return std::string
+ *
+ * @note This signature carries the actual function definition.
+ */
+std::string encode(const base64::BYTE* buf, unsigned int bufLen); // definition
+
+/**
+ * @brief Returns a base64-decoded std::vector (an array) of unsigned chars from another std::vector of unsigned chars.
+ *
+ * @param s
+ * @return std::vector<base64::BYTE>
+ *
+ * @note This signature is an overloaded function definition (the actual definition is static).
+ */
+std::vector<base64::BYTE> decode(const std::vector<base64::BYTE>& s);
+
+/**
+ * @brief Returns a base64-encoded std::string from another std::string.
+ *
+ * @param s
+ * @return std::string
+ *
+ * @note This signature is an overloaded function definition.
+ */
+std::string encode(std::string const& s);
+
+/**
+ * @brief Returns a base64-decoded std::vector (an array) of unsigned chars from an std::string.
+ *
+ * @param s
+ * @return std::vector<base64::BYTE>
+ *
+ * @note This signature is an overloaded function definition (the actual definition is static).
+ */
 std::vector<base64::BYTE> decode(const std::string& s);
 
-std::string encode(std::string const& s);                                         // overloads
 
-#if __cplusplus >= 201703L
 // Interfaces with std::string_view rather than const std::string&
 // Requires C++17
+#if __cplusplus >= 201703L
+/**
+ * @brief Returns a base64-encoded std::string from an std::string_view.
+ *
+ * @param s
+ * @return std::string
+ *
+ * @note This signature is an overloaded function definition.
+ */
 std::string encode(std::string_view const& s);
-std::vector<base64::BYTE> decode(std::string_view const& s) ;
-#endif
 
-}
+/**
+ * @brief Returns a base64-decoded std::vector (an array) of unsigned chars from an std::string_view.
+ *
+ * @param s
+ * @return std::vector<base64::BYTE>
+ *
+ * @note This signature is an overloaded function definition (the actual definition is static).
+ */
+std::vector<base64::BYTE> decode(std::string_view const& s); // overload (definition is static)
+
+#endif // __cplusplus >= 201703L
+
+} // namespace base64
+
 #endif // BASE64_H_

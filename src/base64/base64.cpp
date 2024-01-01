@@ -31,7 +31,7 @@
 namespace base64 {
 
 /**
- * @brief
+ * @brief The base64 alphabet (non-URL).
  *
  */
 static const std::string alphabet =
@@ -77,13 +77,6 @@ static std::string _encode(Str s)
   return base64::encode(reinterpret_cast<const base64::BYTE*>(s.data()), s.length());
 }
 
-/**
- * @brief
- *
- * @param buf
- * @param bufLen
- * @return std::string
- */
 std::string encode(const base64::BYTE* buf, unsigned int bufLen) {
 
   std::string out;
@@ -178,32 +171,14 @@ static std::vector<base64::BYTE> _decode(const Str& encoded_string) {
   return out;
 }
 
-/**
- * @brief
- *
- * @param s
- * @return std::string
- */
 std::string encode(const std::string& s) {
   return base64::_encode<std::string>(s);
 }
 
-/**
- * @brief
- *
- * @param s
- * @return std::vector<base64::BYTE>
- */
 std::vector<base64::BYTE> decode(const std::string& s) {
   return base64::_decode<std::string>(s);
 }
 
-/**
- * @brief
- *
- * @param s
- * @return std::vector<base64::BYTE>
- */
 std::vector<base64::BYTE> decode(const std::vector<base64::BYTE>& s) {
   return base64::_decode<std::vector<base64::BYTE>>(s);
 }
@@ -225,4 +200,5 @@ template std::vector<base64::BYTE> _decode(const std::string& encoded_string);
 template std::string _encode(std::string_view const& s);
 template std::vector<base64::BYTE> _decode(const std::string_view& encoded_string);
 #endif
+
 } // namespace base64
