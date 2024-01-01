@@ -33,9 +33,19 @@
 #include <iostream>
 #include <string>
 
+namespace base64 {
+enum modeSwitcher {
+  INPUT,
+  ENCODE,
+  DECODE,
+  DIFFED, // Check the difference between the input data and the encode/decode output, if any.
+  OUTPUT
+};
+}
+
 int main(int argc, char *argv[])
 {
-  // Parse command-line arguments
+  // Parse command-line arguments...
   std::vector<std::string> args(argv + 1, argv + argc);
 
   if (args.size() < 1) {
@@ -50,17 +60,18 @@ int main(int argc, char *argv[])
     return EXIT_FAILURE;
   }
 
-  // Read files passed as arguments on the command line
+  // Read files passed as arguments on the command line...
   for (auto i = 0; i < args.size(); ++i) {
 
     std::string line;
     std::ifstream file;
     auto filename = args[i].data();
+    auto mode = base64::modeSwitcher::ENCODE;
 
     // args.data() could be "package.json" or so...
     file.open(filename);
 
-    // Error if file cannot be opened for any reason
+    // Error if file cannot be opened for any reason...
     if (!file.is_open()) {
       std::cerr << "base64: could not open input file '" << args[i] << "'!\n";
       return EXIT_FAILURE;
@@ -69,6 +80,7 @@ int main(int argc, char *argv[])
     // Read file line by line
     while (std::getline(file, line)) {
 
+      // Store some data...
       std::vector<base64::BYTE> myData;
 
       for (auto i = line.begin(); i != line.end(); i++)
@@ -76,49 +88,65 @@ int main(int argc, char *argv[])
         myData.push_back(*i);
       }
 
-      std::string encodedData = base64::encode(&myData[0], myData.size());
+      // if (mode >= 1) {
+        // Encode it...
+        std::string encodedData = base64::encode(&myData[0], myData.size());
 
-      std::vector<base64::BYTE> decodedData = base64::decode(encodedData);
+      // if (mode >= 2) {
+        // Decode it...
+        std::vector<base64::BYTE> decodedData = base64::decode(myData);
 
+      // if (mode >= 3) {
+      // Check for any differences...
+      std::vector<base64::BYTE> diffData = base64::decode(encodedData);
+      std::string diffedOut;
+
+      for (auto i = line.begin(); i != line.end(); i++)
+      {
+        if (myData.size() == diffData.size()) {
+          diffedOut.push_back((char) 0);
+        } else {
+          diffedOut.push_back((char) 1);
+        };
+      }
+
+      // if (mode >= 4) {
       // Pass it back out...
       std::string out;
-
       for (auto i = decodedData.begin(); i != decodedData.end(); i++)
       {
         out.push_back(*i);
       }
 
-
-      enum modeSwitcher {
-        INPUT,
-        ENCODE,
-        DECODE,
-        OUTPUT
-      };
-
-      const modeSwitcher mode = ENCODE;
-
+      // Output mode
       switch (mode)
       {
-      case INPUT:
+      case base64::modeSwitcher::INPUT:
         for (auto x : myData)
           std::cout << x;
         std::cout << std::endl;
         break;
 
-      case ENCODE:
+      case base64::modeSwitcher::ENCODE:
+
         for (auto x : encodedData)
           std::cout << x;
         std::cout << std::endl;
         break;
 
-      case DECODE:
+      case base64::modeSwitcher::DECODE:
         for (auto x : decodedData)
           std::cout << x;
         std::cout << std::endl;
         break;
 
-      case OUTPUT:
+      case base64::modeSwitcher::DIFFED:
+        for (auto x : diffedOut)
+          std::cout << x;
+        std::cout << std::endl;
+        break;
+
+      case base64::modeSwitcher::OUTPUT:
         for (auto x : out)
           std::cout << x;
         std::cout << std::endl;
@@ -131,14 +159,18 @@ int main(int argc, char *argv[])
         break;
       }
 
-      // Destroy all data
-      myData.clear();
-      encodedData.clear();
-      decodedData.clear();
+      // Destroy all data...
       out.clear();
+      // }
+      decodedData.clear();
+      // }
+      encodedData.clear();
+      // }
+      myData.clear();
+      // } // mode comparison
     }
 
-    // Close the file
+    // Close the file.
     filename = nullptr;
     file.close();
 
