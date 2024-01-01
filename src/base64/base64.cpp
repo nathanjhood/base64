@@ -186,18 +186,18 @@ std::vector<base64::BYTE> decode(const std::vector<base64::BYTE>& s) {
 // Interfaces with std::string_view rather than const std::string&
 // Requires C++17
 #if __cplusplus >= 201703L
-std::string encode(const std::string_view & s) {
+std::string encode(const std::string_view& s) {
   return base64::_encode<std::string_view>(s);
 }
-std::vector<base64::BYTE> decode(const std::string_view & s) {
+std::vector<base64::BYTE> decode(const std::string_view& s) {
   return base64::_decode<std::string_view>(s);
 }
 #endif
 
-template std::string _encode(std::string const& s);
+template std::string _encode(const std::string& s);
 template std::vector<base64::BYTE> _decode(const std::string& encoded_string);
 #if __cplusplus >= 201703L
-template std::string _encode(std::string_view const& s);
+template std::string _encode(const std::string_view& s);
 template std::vector<base64::BYTE> _decode(const std::string_view& encoded_string);
 #endif
 
