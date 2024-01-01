@@ -76,7 +76,7 @@ set (${PROJECT_NAME}_TARGETS ${TARGETS} CACHE STRING "Targets to be built." FORC
 
 export(
   TARGETS ${${PROJECT_NAME}_TARGETS}
-  FILE ${PROJECT_BINARY_DIR}/share/cmake/${PROJECT_NAME}_targets.cmake
+  FILE ${PROJECT_BINARY_DIR}/share/cmake/${PROJECT_NAME}Targets.cmake
   NAMESPACE ${PROJECT_NAME}::
 )
 

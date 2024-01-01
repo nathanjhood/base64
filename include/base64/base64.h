@@ -25,13 +25,6 @@
  *
  * 3. This notice may not be removed or altered from any source distribution.
  *
- * @brief eg
- * ```
- * std::vector<BYTE> myData;
- * ...
- * std::string encodedData = base64_encode(&myData[0], myData.size());
- * std::vector<BYTE> decodedData = base64_decode(encodedData);
- *
  */
 
 #ifndef BASE64_H_
@@ -40,16 +33,21 @@
 #include <vector>
 #include <string>
 
-namespace Base64
-{
+namespace base64 {
 
 typedef unsigned char BYTE;
 
-std::string Encode(const std::string& s);                           // overload
-std::string Encode(const Base64::BYTE* buf, unsigned int bufLen);   // definition
+std::string encode(const base64::BYTE* buf, unsigned int bufLen);                 // definitions
+std::vector<base64::BYTE> decode(const std::string& s);
 
+std::string encode(std::string const& s);                                         // overloads
 
-std::vector<Base64::BYTE> Decode(const std::string& encoded_string); // definition
+#if __cplusplus >= 201703L
+// Interfaces with std::string_view rather than const std::string&
+// Requires C++17
+std::string encode(std::string_view const& s);
+std::vector<base64::BYTE> decode(std::string_view const& s) ;
+#endif
 
 }
 #endif // BASE64_H_
