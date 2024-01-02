@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.15...3.27 FATAL_ERROR)
+cmake_minimum_required (VERSION 3.15...3.28 FATAL_ERROR)
 
 set (CMAKE_MODULE_PATH
   "${CMAKE_CURRENT_LIST_DIR}/share/cmake/Modules"
