@@ -63,38 +63,37 @@ int main(int argc, char* argv[])
     std::string line;
     int         line_count = 1;
 
+    // TODO: 'Mode' == ENCODE {...
     while (std::getline(input_file, line)) {
 
-      if (base64::commands::show_line_numbers()) {
+      if (base64::cli::show_line_numbers()) {
         std::cout << std::setw(6) << std::setfill(' ') << line_count++ << "  ";
       }
 
-      // TODO: only if (mode >= 1) {
-      // Encode it...
-      std::string encodedData = base64::encode(line);
+      // Encode it (note: new string per line found)...
+      std::string encodedData;
+      encodedData.reserve(line.size());
+      try {
+        encodedData += base64::encode(line);
+      } catch (const std::exception &x) {
+        std::cerr << x.what() << '\n';
+        std::cerr << "base64: could not encode input file '" << file_name << "'!\n";
+        return EXIT_FAILURE;
+      }
 
       // This is the main print-out to stdout
-      std::cout << encodedData;
+      // std::cout << encodedData.data();
+      for (auto x : encodedData)
+        std::cout << x;
 
-      if (base64::commands::show_ends()) {
+      if (base64::cli::show_ends()) {
         std::cout << '$';
       }
 
       std::cout << '\n';
-    }
-  }
 
-  //     // Destroy all data...
-  //     out.clear();                            // TODO: only if (mode >= 4)
-  //     // }
-  //     diffedOut.clear(); diffedOut.clear();   // TODO: only if (mode >= 3)
-  //     // }
-  //     decodedData.clear();                    // TODO: only if (mode >= 2)
-  //     // }
-  //     encodedData.clear();                    // TODO: only if (mode >= 1)
-  //     // }
-  //     myData.clear();                         // TODO: only if (mode >= 1)
-  //     // }                                    // TODO: mode comparison
+      encodedData.clear();
+    }
   //   }
 
   //   // Close the file.
