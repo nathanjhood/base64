@@ -28,6 +28,9 @@
  *
  */
 
+#ifndef BASE_64_CLI_H_
+#define BASE_64_CLI_H_
+
 #include <string>
 #include <vector>
 
@@ -58,3 +61,5 @@ bool show_help();
 
 } // namespace commands
 } // namespace base64
+
+#endif // BASE_64_CLI_H_
