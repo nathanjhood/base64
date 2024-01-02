@@ -153,7 +153,6 @@ static std::vector<base64::BYTE> _decode(const Str& encoded_string) {
   int in_len = encoded_string.size();
   base64::BYTE index[4];
   base64::BYTE stream[3];
-
   out.reserve(in_len);
 
   while (in_len-- && (encoded_string[in_] != '=') && is_base64(encoded_string[in_])) {
