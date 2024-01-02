@@ -118,22 +118,10 @@ const std::vector<std::string>& input_files() {
   return _input_files;
 }
 
-/**
- * @brief
- *
- * @return true
- * @return false
- */
 bool show_ends() {
   return _show_ends;
 }
 
-/**
- * @brief
- *
- * @return true
- * @return false
- */
 bool show_line_numbers() {
   return _show_line_numbers;
 }
