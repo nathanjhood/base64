@@ -30,7 +30,6 @@
 #include "base64/cli.hpp"
 #include "base64/base64.hpp"
 
-#include <algorithm>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
