@@ -36,6 +36,8 @@
 namespace base64 {
 namespace cli {
 
+static base64::cli::Mode              _mode              = base64::cli::Mode::ENCODE;
+static bool                           _mode_is_set       = false;
 
 static std::vector<std::string>       _input_files;
 static bool                           _show_line_numbers = false;
@@ -109,11 +111,15 @@ void parse(int argc, char* argv[]) {
   }
 }
 
-/**
- * @brief Get the Input Files object.
- *
- * @return const std::vector<std::string>&
- */
+void set_mode(const base64::cli::MODE& m) {
+  _mode = m;
+  _mode_is_set = true;
+}
+
+base64::cli::MODE get_mode() {
+  return _mode;
+}
+
 const std::vector<std::string>& input_files() {
   return _input_files;
 }

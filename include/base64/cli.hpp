@@ -48,6 +48,38 @@ enum Mode {
   OUTPUT
 };
 
+typedef Mode MODE;
+
+//           foreground background
+// black        30         40
+// red          31         41
+// green        32         42
+// yellow       33         43
+// blue         34         44
+// magenta      35         45
+// cyan         36         46
+// white        37         47
+const std::string black  ("\033[0;30m");
+const std::string red    ("\033[0;31m");
+const std::string green  ("\033[0;32m");
+const std::string yellow ("\033[0;33m");
+const std::string blue   ("\033[0;34m");
+const std::string magenta("\033[0;35m");
+const std::string cyan   ("\033[0;36m");
+const std::string white  ("\033[0;37m");
+// reset             0  (everything back to normal)
+// bold/bright       1  (often a brighter shade of the same colour)
+// underline         4
+// inverse           7  (swap foreground and background colours)
+// bold/bright off  21
+// underline off    24
+// inverse off      27
+const std::string reset    ("\033[0m");
+const std::string bold     ("\033[1m");
+const std::string underline("\033[4m");
+const std::string inverse  ("\033[7m");
+// useage: 'std::cout << cli::red << "red text" << cli::reset << std::endl;'
+
 void parse(int argc, char* argv[]);
 
 const std::vector<std::string>& input_files();
