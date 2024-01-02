@@ -27,158 +27,81 @@
  *
  */
 
-#include "base64/base64.h"
+#include "base64/cli.hpp"
+#include "base64/base64.hpp"
+
 #include <algorithm>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <string>
 
-namespace base64 {
-enum modeSwitcher {
-  INPUT,
-  ENCODE,
-  DECODE,
-  DIFFED, // Check the difference between the input data and the encode/decode output, if any.
-  OUTPUT
-};
-}
-
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-  // TODO: Parse args for flags such as '--version', '--mode'...
   // Parse command-line arguments...
-  std::vector<std::string> args(argv + 1, argv + argc);
-
-  if (args.size() < 1) {
-    std::cerr << "base64: missing input string argument!" << std::endl;
-    std::cerr << "usage: base64 <input_string> ..." << std::endl;
-    return EXIT_FAILURE;
-
-  }
-  if (args.size() > 64) {
-    std::cerr << "base64: too many input string arguments!" << std::endl;
-    std::cerr << "usage: base64 <input_string> ..." << std::endl;
+  try {
+    base64::commands::parse(argc, argv);
+  } catch (const std::exception &x) {
+    std::cerr << x.what() << '\n';
+    std::cerr << "usage: base64 [-n|--number] [-E|--show-ends] <input_file> ...\n";
     return EXIT_FAILURE;
   }
 
-  // Read files passed as arguments on the command line...
-  for (auto i = 0; i < args.size(); ++i) {
+  // Return the files that were passed in to 'parse()'
+  // and iterate through them...
+  for (const auto &file_name : base64::commands::input_files()) {
 
-    std::string line;
-    std::ifstream file;
-    auto filename = args[i].data();
-    auto mode = base64::modeSwitcher::ENCODE;
-
-    // args.data() could be "package.json" or so...
-    file.open(filename);
+    std::ifstream input_file(file_name.data(), std::ios::in);
 
     // Error if file cannot be opened for any reason...
-    if (!file.is_open()) {
-      std::cerr << "base64: could not open input file '" << args[i] << "'!\n";
+    if (!input_file.is_open()) {
+      std::cerr << "base64: could not open input file '" << file_name << "'!\n";
       return EXIT_FAILURE;
     }
 
-    // Read file line by line
-    while (std::getline(file, line)) {
+    std::string line;
+    int         line_count = 1;
 
-      // Store some data...
-      std::vector<base64::BYTE> myData;
+    while (std::getline(input_file, line)) {
 
-      for (auto i = line.begin(); i != line.end(); i++)
-      {
-        myData.push_back(*i);
+      if (base64::commands::show_line_numbers()) {
+        std::cout << std::setw(6) << std::setfill(' ') << line_count++ << "  ";
       }
 
       // TODO: only if (mode >= 1) {
       // Encode it...
-      std::string encodedData = base64::encode(&myData[0], myData.size());
+      std::string encodedData = base64::encode(line);
 
-      // TODO: only if (mode >= 2) {
-      // Decode it...
-      std::vector<base64::BYTE> decodedData = base64::decode(myData);
+      // This is the main print-out to stdout
+      std::cout << encodedData;
 
-      // TODO: only if (mode >= 3) {
-      // Check for any differences...
-      std::vector<base64::BYTE> diffData = base64::decode(encodedData);
-      std::string diffedOut;
-
-      for (auto i = line.begin(); i != line.end(); i++)
-      {
-        if (myData.size() == diffData.size()) {
-          diffedOut.push_back((char) 0);
-        } else {
-          diffedOut.push_back((char) 1);
-        };
+      if (base64::commands::show_ends()) {
+        std::cout << '$';
       }
 
-      // TODO: only if (mode >= 4) {
-      // Pass it back out...
-      std::string out;
-      for (auto i = decodedData.begin(); i != decodedData.end(); i++)
-      {
-        out.push_back(*i);
-      }
-
-      // TODO: Output mode
-      switch (mode)
-      {
-      case base64::modeSwitcher::INPUT:
-        for (auto x : myData)
-          std::cout << x;
-        std::cout << std::endl;
-        break;
-
-      case base64::modeSwitcher::ENCODE:
-
-        for (auto x : encodedData)
-          std::cout << x;
-        std::cout << std::endl;
-        break;
-
-      case base64::modeSwitcher::DECODE:
-        for (auto x : decodedData)
-          std::cout << x;
-        std::cout << std::endl;
-        break;
-
-      case base64::modeSwitcher::DIFFED:
-        for (auto x : diffedOut)
-          std::cout << x;
-        std::cout << std::endl;
-        break;
-
-      case base64::modeSwitcher::OUTPUT:
-        for (auto x : out)
-          std::cout << x;
-        std::cout << std::endl;
-        break;
-
-      default:
-        for (auto x : encodedData)
-          std::cout << x;
-        std::cout << std::endl;
-        break;
-      }
-
-      // Destroy all data...
-      out.clear();                            // TODO: only if (mode >= 4)
-      // }
-      diffedOut.clear(); diffedOut.clear();   // TODO: only if (mode >= 3)
-      // }
-      decodedData.clear();                    // TODO: only if (mode >= 2)
-      // }
-      encodedData.clear();                    // TODO: only if (mode >= 1)
-      // }
-      myData.clear();                         // TODO: only if (mode >= 1)
-      // }                                    // TODO: mode comparison
+      std::cout << '\n';
     }
-
-    // Close the file.
-    filename = nullptr;
-    file.close();
-
-    std::cout << std::endl;
   }
+
+  //     // Destroy all data...
+  //     out.clear();                            // TODO: only if (mode >= 4)
+  //     // }
+  //     diffedOut.clear(); diffedOut.clear();   // TODO: only if (mode >= 3)
+  //     // }
+  //     decodedData.clear();                    // TODO: only if (mode >= 2)
+  //     // }
+  //     encodedData.clear();                    // TODO: only if (mode >= 1)
+  //     // }
+  //     myData.clear();                         // TODO: only if (mode >= 1)
+  //     // }                                    // TODO: mode comparison
+  //   }
+
+  //   // Close the file.
+  //   filename = nullptr;
+  //   file.close();
+
+  //   std::cout << std::endl;
+  // }
 
   return EXIT_SUCCESS;
 }
