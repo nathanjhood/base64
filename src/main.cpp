@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
 {
   // Parse command-line arguments...
   try {
-    base64::commands::parse(argc, argv);
+    base64::cli::parse(argc, argv);
   } catch (const std::exception &x) {
     std::cerr << x.what() << '\n';
     std::cerr << "usage: base64 [-n|--number] [-E|--show-ends] <input_file> ...\n";
@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
 
   // Return the files that were passed in to 'parse()'
   // and iterate through them...
-  for (const auto &file_name : base64::commands::input_files()) {
+  for (const auto &file_name : base64::cli::input_files()) {
 
     std::ifstream input_file(file_name.data(), std::ios::in);
 

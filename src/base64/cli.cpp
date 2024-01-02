@@ -34,7 +34,8 @@
 #include <fstream>
 
 namespace base64 {
-namespace commands {
+namespace cli {
+
 
 static std::vector<std::string>       _input_files;
 static bool                           _show_line_numbers = false;

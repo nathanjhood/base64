@@ -36,7 +36,7 @@
 
 namespace base64
 {
-namespace commands
+namespace cli
 {
 
 // TODO:
