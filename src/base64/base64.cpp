@@ -1,10 +1,12 @@
 /**
  * @file base64.cpp
  * @author René Nyffenegger (rene.nyffenegger@adp-gmbh.ch)
+ * @author Nathan J. Hood   (nathanjhood@googlemail.com)
  * @version 0.1
  * @date 2023-12-29
  *
- * @copyright Copyright (C) 2004-2008 René Nyffenegger
+ * @copyright Copyright (C) 2004-2008 René Nyffenegger (original functions)
+ * @copyright Copyright (C) 2023       Nathan J. Hood  (revisions)
  *
  * This source code is provided 'as-is', without any express or implied
  * warranty. In no event will the author be held liable for any damages
@@ -26,7 +28,7 @@
  *
  */
 
-#include "base64/base64.h"
+#include "base64/base64.hpp"
 
 namespace base64 {
 
@@ -62,6 +64,16 @@ static inline bool is_base64_url(const base64::BYTE& c) {
   return (isalnum(c) || (c == '-') || (c == '_'));
 }
 
+/**
+ * @brief Convert a char to an unsigned char without casting.
+ *
+ * @param c
+ * @return unsigned char
+ */
+static unsigned char to_unsigned_char(char c) {
+  return c;
+}
+
 template <typename Str>
 /**
  * @brief
@@ -85,16 +97,20 @@ std::string encode(const base64::BYTE* buf, unsigned int bufLen) {
   base64::BYTE stream[3];
   base64::BYTE index[4];
 
-  while (bufLen--) {
-    stream[i++] = *(buf++);
-    if (i == 3) {
-      index[0] = ( stream[0] & 0xfc) >> 2;
-      index[1] = ((stream[0] & 0x03) << 4) + ((stream[1] & 0xf0) >> 4);
-      index[2] = ((stream[1] & 0x0f) << 2) + ((stream[2] & 0xc0) >> 6);
-      index[3] =   stream[2] & 0x3f;
+  out.reserve(bufLen);
 
-      for(i = 0; (i <4) ; i++)
-        out += base64::alphabet[index[i]];
+  while (bufLen--) {
+
+    stream[i++] = *(buf++);
+
+    if (i == 3) {
+      index[0] = base64::alphabet[( to_unsigned_char(stream[0]) >> 2)                                       & 0x3f];
+      index[1] = base64::alphabet[((to_unsigned_char(stream[0]) << 4) + (to_unsigned_char(stream[1]) >> 4)) & 0x3f];
+      index[2] = base64::alphabet[((to_unsigned_char(stream[1]) << 2) + (to_unsigned_char(stream[2]) >> 6)) & 0x3f];
+      index[3] = base64::alphabet[  to_unsigned_char(stream[2])                                             & 0x3f];
+
+      for(i = 0; (i < 4) ; i++)
+        out += index[i];
       i = 0;
     }
   }
@@ -104,13 +120,13 @@ std::string encode(const base64::BYTE* buf, unsigned int bufLen) {
     for(j = i; j < 3; j++)
       stream[j] = '\0';
 
-    index[0] = ( stream[0] & 0xfc) >> 2;
-    index[1] = ((stream[0] & 0x03) << 4) + ((stream[1] & 0xf0) >> 4);
-    index[2] = ((stream[1] & 0x0f) << 2) + ((stream[2] & 0xc0) >> 6);
-    index[3] =   stream[2] & 0x3f;
+    index[0] = base64::alphabet[( to_unsigned_char(stream[0]) >> 2)                                        & 0x3f];
+    index[1] = base64::alphabet[((to_unsigned_char(stream[0]) << 4) + ( to_unsigned_char(stream[1]) >> 4)) & 0x3f];
+    index[2] = base64::alphabet[((to_unsigned_char(stream[1]) << 2) + ( to_unsigned_char(stream[2]) >> 6)) & 0x3f];
+    index[3] = base64::alphabet[  to_unsigned_char(stream[2])                                              & 0x3f];
 
     for (j = 0; (j < i + 1); j++)
-      out += base64::alphabet[index[j]];
+      out += index[j];
 
     while((i++ < 3))
       out += '=';
@@ -138,18 +154,23 @@ static std::vector<base64::BYTE> _decode(const Str& encoded_string) {
   base64::BYTE index[4];
   base64::BYTE stream[3];
 
-  while (in_len-- && (  encoded_string[in_] != '=') && is_base64(encoded_string[in_])) {
-    index[i++] = encoded_string[in_]; in_++;
-    if (i ==4) {
+  out.reserve(in_len);
+
+  while (in_len-- && (encoded_string[in_] != '=') && is_base64(encoded_string[in_])) {
+
+    index[i++] = encoded_string[in_];
+    in_++;
+
+    if (i == 4) {
       for (i = 0; i < 4; i++)
         index[i] = base64::alphabet.find(index[i]);
 
-      stream[0] = ( index[0]        << 2) + ((index[1] & 0x30) >> 4);
-      stream[1] = ((index[1] & 0xf) << 4) + ((index[2] & 0x3c) >> 2);
-      stream[2] = ((index[2] & 0x3) << 6) +   index[3];
+      stream[0] = (to_unsigned_char(index[0]) << 2) + (to_unsigned_char(index[1]) >> 4);
+      stream[1] = (to_unsigned_char(index[1]) << 4) + (to_unsigned_char(index[2]) >> 2);
+      stream[2] = (to_unsigned_char(index[2]) << 6) +  to_unsigned_char(index[3]);
 
       for (i = 0; (i < 3); i++)
-          out.push_back(stream[i]);
+          out.emplace_back(stream[i]);
       i = 0;
     }
   }
@@ -161,11 +182,12 @@ static std::vector<base64::BYTE> _decode(const Str& encoded_string) {
     for (j = 0; j < 4; j++)
       index[j] = base64::alphabet.find(index[j]);
 
-    stream[0] = ( index[0]        << 2) + ((index[1] & 0x30) >> 4);
-    stream[1] = ((index[1] & 0xf) << 4) + ((index[2] & 0x3c) >> 2);
-    stream[2] = ((index[2] & 0x3) << 6) +   index[3];
+    stream[0] = (to_unsigned_char(index[0]) << 2) + (to_unsigned_char(index[1]) >> 4);
+    stream[1] = (to_unsigned_char(index[1]) << 4) + (to_unsigned_char(index[2]) >> 2);
+    stream[2] = (to_unsigned_char(index[2]) << 6) +  to_unsigned_char(index[3]);
 
-    for (j = 0; (j < i - 1); j++) out.push_back(stream[j]);
+    for (j = 0; (j < i - 1); j++)
+      out.emplace_back(stream[j]);
   }
 
   return out;

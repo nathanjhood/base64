@@ -11,7 +11,7 @@ project (base64 VERSION 1.0.0.0)
 # Add our headers to a list
 set(HEADERS)
 list(APPEND HEADERS
-  "include/${PROJECT_NAME}/${PROJECT_NAME}.h"
+  "include/${PROJECT_NAME}/${PROJECT_NAME}.hpp"
 )
 
 set(SOURCE_FILES)
@@ -30,10 +30,12 @@ endif()
 # Start a list of targets to be built
 set(TARGETS)
 
+## Shared library
+
 # Build a shared library named after the project
 # Alias it to the vendor namespace
 add_library(${PROJECT_NAME} SHARED)
-add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS base64)
+add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 # Put our target in the right output dir
 set_target_properties(${PROJECT_NAME}
@@ -54,11 +56,37 @@ target_include_directories(${PROJECT_NAME}
 # Include our sources to be compiled
 target_sources(${PROJECT_NAME} PRIVATE ${SOURCE_FILES})
 
+# Add the target to the list
+list(APPEND TARGETS ${PROJECT_NAME})
+
+## Command Line
+
+configure_file("include/${PROJECT_NAME}/cli.hpp" "include/${PROJECT_NAME}/cli.hpp")
+add_library(cli SHARED)
+add_library(${PROJECT_NAME}::cli ALIAS cli)
+set_target_properties(cli
+  PROPERTIES
+  ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+  LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+  RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+  PDB_OUTPUT_DIRECTORY     "${CMAKE_BINARY_DIR}/bin"
+)
+target_include_directories(cli
+  PUBLIC
+    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
+target_sources(cli PRIVATE "src/${PROJECT_NAME}/cli.cpp")
+target_link_libraries(cli ${PROJECT_NAME}::${PROJECT_NAME})
+list(APPEND TARGETS cli)
+
+## Executable
+
 # Create an exectable for testing
 add_executable(main)
 add_executable(${PROJECT_NAME}::main ALIAS main)
 target_sources(main PRIVATE "src/main.cpp")
-target_link_libraries(main ${PROJECT_NAME}::${PROJECT_NAME})
+target_link_libraries(main ${PROJECT_NAME}::${PROJECT_NAME} cli)
 set_target_properties(main
   PROPERTIES
   ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
@@ -69,7 +97,7 @@ set_target_properties(main
 )
 
 # Add the target to the list
-list(APPEND TARGETS ${PROJECT_NAME} main)
+list(APPEND TARGETS main)
 
 # Collect and export targets
 set (${PROJECT_NAME}_TARGETS ${TARGETS} CACHE STRING "Targets to be built." FORCE)
