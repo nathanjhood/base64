@@ -319,9 +319,9 @@ $ yarn && yarn start
 
 ## Coming soon...
 
-PLEASE NOTE: This project should not really be installed system-wide nor placed in your operating system's ```PATH```, due to the naming conflict with the actual system-level base64 implementation.
+*<b>PLEASE NOTE</b>: This project should not really be installed system-wide nor placed in your operating system's ```PATH```, due to the naming conflict with the actual system-level base64 implementation.
 
-Due to this, and also some interest in implementing further encode/decode algorithms as well as implementing the entire package as NodeJs binary addons, this project will likely either be renamed, or deprecated in favor of a larger, more realized project.
+Due to this, and also some interest in implementing further encode/decode algorithms as well as implementing the entire package as NodeJs binary addons, this project will likely either be renamed, or deprecated in favor of a larger, more realized project.*
 
 Currently working on a switch argument for the different modes (encode, decode, possibly a 'diff' mode for testing, debugging, etc). Also adding the standard CLI flags (```--version```, ```--help```, ```--verbose```, etc) but without depending on ```getopt``` or any C library. Furthermore, colorization line numbers and line ending chars is already in the codebase, but will need a bit of system-detection logic to ensure that the end-user's terminal actually [supports colourized output](https://linux.die.net/man/5/terminfo).
 
