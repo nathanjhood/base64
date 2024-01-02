@@ -38,6 +38,8 @@
 
 int main(int argc, char* argv[])
 {
+  bool ok = true;
+
   // Parse command-line arguments...
   try {
     base64::cli::parse(argc, argv);
@@ -103,5 +105,5 @@ int main(int argc, char* argv[])
   //   std::cout << std::endl;
   // }
 
-  return EXIT_SUCCESS;
+  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }
