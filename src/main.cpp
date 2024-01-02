@@ -94,14 +94,46 @@ int main(int argc, char* argv[])
 
       encodedData.clear();
     }
-  //   }
 
-  //   // Close the file.
-  //   filename = nullptr;
-  //   file.close();
+    // // // TODO: 'Mode' == DECODE {...
+    // while (std::getline(input_file, line)) {
 
-  //   std::cout << std::endl;
-  // }
+    //   if (base64::cli::show_line_numbers()) {
+    //     std::cout << std::setw(6) << std::setfill(' ') << line_count++ << "  ";
+    //   }
+
+    //   // Store some data...
+    //   // std::vector<base64::BYTE> myData;
+    //   std::vector<base64::BYTE> decodedData;
+
+    //   try {
+    //     for (auto i = line.begin(); i != line.end(); i++)
+    //     {
+    //       // myData.push_back(*i);
+    //       decodedData = base64::decode(line);
+    //     }
+    //   } catch (const std::exception &x) {
+    //     std::cerr << x.what() << '\n';
+    //     std::cerr << "base64: could not decode input file '" << file_name << "'!\n";
+    //     return EXIT_FAILURE;
+    //   }
+
+    //   // This is the main print-out to stdout
+    //   for (auto x : decodedData)
+    //       std::cout << x;
+
+    //   if (base64::cli::show_ends()) {
+    //     std::cout << '$';
+    //   }
+
+    //   std::cout << '\n';
+
+    //   decodedData.clear();
+    // }
+
+    line.clear();
+    input_file.close();
+  }
 
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }
