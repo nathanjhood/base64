@@ -39,7 +39,10 @@ namespace base64
 namespace cli
 {
 
-// TODO:
+/**
+ * @brief
+ * TODO:
+ */
 enum Mode {
   INPUT,
   ENCODE,
@@ -80,15 +83,51 @@ const std::string underline("\033[4m");
 const std::string inverse  ("\033[7m");
 // useage: 'std::cout << cli::red << "red text" << cli::reset << std::endl;'
 
+/**
+ * @brief
+ *
+ * @param argc
+ * @param argv
+ */
 void parse(int argc, char* argv[]);
 
+/**
+ * @brief
+ *
+ * @return const std::vector<std::string>&
+ */
 const std::vector<std::string>& input_files();
+
+/**
+ * @brief
+ *
+ * @return true
+ * @return false
+ */
 bool show_ends();
+
+/**
+ * @brief
+ *
+ * @return true
+ * @return false
+ */
 bool show_line_numbers();
 
-// TODO:
+/**
+ * @brief
+ * TODO:
+ * @return true
+ * @return false
+ */
 bool show_version();
-// TODO:
+
+/**
+ * @brief
+ * TODO:
+ * @return true
+ * @return false
+ */
 bool show_help();
 
 } // namespace commands

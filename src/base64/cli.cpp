@@ -46,12 +46,6 @@ static bool                           _show_ends         = false;
 static bool                           _show_version      = false;
 static bool                           _show_help         = false;
 
-/**
- * @brief
- *
- * @param argc
- * @param argv
- */
 void parse(int argc, char* argv[]) {
 
   if (argc < 1) {
@@ -103,7 +97,7 @@ void parse(int argc, char* argv[]) {
     }
 
     if (!std::filesystem::exists(arg)) {
-      throw std::runtime_error(std::string("dog: ") + std::string(arg) + ": No such file or directory");
+      throw std::runtime_error(std::string("base64: ") + std::string(arg) + ": No such file or directory");
     }
 
     // Read files passed as arguments on the command line
