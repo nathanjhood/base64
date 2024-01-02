@@ -2,6 +2,10 @@
 
 Base64 encode/decode CLI in C++.
 
+```.sh
+$ base64 [OPTIONS] [FILE]...
+```
+
 - [Usage](https://github.com/nathanjhood/base64/tree/main#usage)
 - [Examples](https://github.com/nathanjhood/base64/tree/main#examples)
 - [About](https://github.com/nathanjhood/base64/tree/main#about)
@@ -12,8 +16,61 @@ Base64 encode/decode CLI in C++.
 
 ## Usage
 
+Let's say we have a file on disk that we want to encode to base 64...
+
 ```.sh
-$ base64 [FILE]...
+# tst.txt
+
+f
+fo
+foo
+foob
+fooba
+foobar
+
+```
+
+We can simply pass the file's location as an argument to base64 to get a readout:
+
+```.sh
+$./build/bin/base64 tst.txt
+
+Zg==
+Zm8=
+Zm9v
+Zm9vYg==
+Zm9vYmE=
+Zm9vYmFy
+```
+
+For further human readability, we can include the line numbers of the file with the ```-n``` (or ```---show-lines```) flag:
+
+```.sh
+$./build/bin/base64 -n tst.txt
+     1
+     2  Zg==
+     3  Zm8=
+     4  Zm9v
+     5  Zm9vYg==
+     6  Zm9vYmE=
+     7  Zm9vYmFy
+     8
+```
+
+As a result of this flag, we can clearly see that there are two empty lines in the file (lines 1 and 8).
+
+In the case of more complex input/output files, it can also be helpful to report the line endings as ```$```. To do this, include the ```-E``` (or ```--show-ends```) flag:
+
+```.sh
+$./build/bin/base64 -n -E tst.txt
+     1  $
+     2  Zg==$
+     3  Zm8=$
+     4  Zm9v$
+     5  Zm9vYg==$
+     6  Zm9vYmE=$
+     7  Zm9vYmFy$
+     8  $
 ```
 
 ## Examples
@@ -265,6 +322,10 @@ $ yarn && yarn start
 PLEASE NOTE: This project should not really be installed system-wide nor placed in your operating system's ```PATH```, due to the naming conflict with the actual system-level base64 implementation.
 
 Due to this, and also some interest in implementing further encode/decode algorithms as well as implementing the entire package as NodeJs binary addons, this project will likely either be renamed, or deprecated in favor of a larger, more realized project.
+
+Currently working on a switch argument for the different modes (encode, decode, possibly a 'diff' mode for testing, debugging, etc). Also adding the standard CLI flags (```--version```, ```--help```, ```--verbose```, etc) but without depending on ```getopt``` or any C library. Furthermore, colorization line numbers and line ending chars is already in the codebase, but will need a bit of system-detection logic to ensure that the end-user's terminal actually [supports colourized output](https://linux.die.net/man/5/terminfo).
+
+My primary interest in this project is to extend functionality to include other algorithms and alphabets, such as Base32, Hex, etc, with a unified interface - or perhaps just a single interface, eventually - and potentially to be used as a Node C++ addon.
 
 ## Thanks for reading!
 
