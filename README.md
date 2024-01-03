@@ -324,7 +324,7 @@ With yarn:
 $ yarn && yarn start
 ```
 
-Currently the NodeJS binary module implements both the ```encode()``` and ````decode()``` functions, which are exported from ```base64.cjs```. Just import/require ```base64``` from this file, and call the functions:
+Currently the NodeJS binary module implements both the ```encode()``` and ```decode()``` functions, which are exported from ```base64.cjs```. <b>Since the file input parsing is currently a part of the CLI implementation, the NodeJS module parses input strings, not files</b>. Just import/require ```base64``` from this file, and call the functions:
 
 ```.js
 // index.js
@@ -357,6 +357,8 @@ Zm9vYmFy
 
 ...
 ```
+
+*PLEASE NOTE: currently the decoder output gets a bit garbled when used as a NodeJs addon (not the CLI or actual implementation) - there are differences between the ```std::string``` family and the corresponding ```Napi::String``` class which require some further debugging.*
 
 ## Coming soon...
 
