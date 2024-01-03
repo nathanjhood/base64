@@ -82,10 +82,16 @@ $./build/bin/base64 -n -E tst.txt
      8  $
 ```
 
+You can also pass the ```--encode``` flag when you want to be specific:
+
+```.sh
+$./build/bin/base64 --encode tst.txt >> out.txt
+```
+
 To decode the data back again, just add the ```--decode``` flag:
 
 ```.sh
-$./build/bin/base64 -n -E --decode tst.txt
+$./build/bin/base64 --decode --show-lines --show-ends out.txt
      1  $
      2  f$
      3  fo$
@@ -96,7 +102,7 @@ $./build/bin/base64 -n -E --decode tst.txt
      8  $
 ```
 
-You can also pass the ```--encode``` flag when you want to be specific; only one mode - encode or decode - can be specified per run, and if neither flag is passed, then the encode function will be selected by default.
+*PLEASE NOTE: only one mode - encode or decode - can be specified per run, and if neither flag is passed, then the encode function will be selected by default.*
 
 ## Goals
 
