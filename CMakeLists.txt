@@ -8,6 +8,12 @@ set (CMAKE_MODULE_PATH
 # Name of the project (will be the name of the plugin)
 project (base64 VERSION 1.0.0.0)
 
+include (WriteVersionFile)
+write_version_file ()
+include (WriteVersionHeader)
+write_version_header ()
+configure_file ("include/${PROJECT_NAME}/version.h" "include/${PROJECT_NAME}/version.h")
+
 # Add our headers to a list
 set(HEADERS)
 list(APPEND HEADERS
