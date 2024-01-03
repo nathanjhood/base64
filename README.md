@@ -317,6 +317,40 @@ With yarn:
 $ yarn && yarn start
 ```
 
+Currently the NodeJS binary module implements both the ```encode()``` and ````decode()``` functions, which are exported from ```base64.cjs```. Just import/require ```base64``` from this file, and call the functions:
+
+```.js
+// index.js
+
+...
+
+console.log(base64.encode(""));
+console.log(base64.encode("f"));
+console.log(base64.encode("fo"));
+console.log(base64.encode("foo"));
+console.log(base64.encode("foob"));
+console.log(base64.encode("fooba"));
+console.log(base64.encode("foobar"));
+console.log(base64.encode(""));
+
+...
+```
+
+Run ```$ node index.js``` to execute the test script:
+
+```
+...
+
+Zg==
+Zm8=
+Zm9v
+Zm9vYg==
+Zm9vYmE=
+Zm9vYmFy
+
+...
+```
+
 ## Coming soon...
 
 <i>PLEASE NOTE: This project should not really be installed system-wide nor placed in your operating system's ```PATH```, due to the naming conflict with the actual system-level base64 implementation.
