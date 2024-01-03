@@ -189,5 +189,6 @@ _deps
 
 ## Custom
 .vscode
+notes.txt
 !favicon.ico
 !icon__32x32.png
