@@ -76,7 +76,7 @@ $./build/bin/base64 -n -E tst.txt
 
 ## Goals
 
-My primary interest in this project is to extend functionality to include other algorithms and alphabets, such as Base32, Hex, etc, with a unified interface - or perhaps just a single interface, eventually - and implement a variety of hand-rolled alphabets as a Node C++ addon, beyond the standard ``atob()```.
+My primary interest in this project is to extend functionality to include other algorithms and alphabets, such as Base32, Hex, etc, with a unified interface - or perhaps just a single interface, eventually - and implement a variety of hand-rolled alphabets as a Node C++ addon, beyond the standard ```atob()```.
 
 This project will serve as a workbench for certain aspects of the intended final application, mostly focusing on the underlying algorithm, as well as interfacing with it from other code - the provided CLI being one example of a possible consumer runtime, and NodeJs being another.
 
