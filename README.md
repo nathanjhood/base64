@@ -358,7 +358,7 @@ Zm9vYmFy
 ...
 ```
 
-*PLEASE NOTE: currently the decoder output gets a bit garbled when used as a NodeJs addon (not the CLI or actual implementation) - there are differences between the ```std::string``` family and the corresponding ```Napi::String``` class which require some further debugging - furthermore, the 'url' version of the base64 alphabet is much more well-suited for usage in tasks where javascript is often deployed. Watch this space.*
+*PLEASE NOTE: currently the decoder output might get a bit garbled when used as a NodeJs addon (not the CLI or actual implementation) - there are differences between the ```std::string``` family and the corresponding ```Napi::String``` class which require some further debugging - furthermore, the 'url' version of the base64 alphabet is much more well-suited for usage in tasks where javascript is often deployed. Watch this space.*
 
 ## Coming soon...
 

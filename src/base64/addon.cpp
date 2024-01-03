@@ -18,17 +18,6 @@
 
 namespace base64 {
 
-// Here, we can extend the source file..
-
-// std::string encode(const Napi::String& s) {
-//   return base64::_encode<Napi::String>(s);
-// }
-// std::vector<base64::BYTE> decode(const Napi::String& s) {
-//   return base64::_decode<Napi::String>(s);
-// }
-// template std::string base64::encode(const Napi::String& s);
-// template std::vector<base64::BYTE> base64::decode(const Napi::String& s);
-
 namespace addon {
 
 Napi::Value Hello(const Napi::CallbackInfo& info)
@@ -61,11 +50,25 @@ Napi::Value Encode(const Napi::CallbackInfo& info)
     return env.Null();
   }
 
-  auto arg = info[0].As<Napi::String>().ToString();
+  std::string encodedArg;
 
-  auto arg0 = base64::encode(arg);
+  try {
+    encodedArg = base64::encode(info[0].As<Napi::String>().ToString());
+  } catch (const std::exception &x) {
+    const char* message = x.what();
+    // message += '\n';
+    // message += 'b', 'a', 's', 'e', '6', '4', ':';
+    // message += ' ', 'c', 'o', 'u', 'l', 'd', ' ', 'n', 'o', 't', ' ', 'd', 'e', 'c', 'o', 'd', 'e';
+    // message += ' ', 'i', 'n', 'p', 'u', 't', ' ', 'a', 'r', 'g', 'u', 'm', 'e', 'n', 't', ' ', '=', ' ';
+    // message + info[0].As<std::string>();
+    Napi::TypeError::New(env, message).ThrowAsJavaScriptException();
+    return env.Null();;
+  }
 
-  return Napi::String::New(env, arg0);
+  Napi::String out = Napi::String::New(env, encodedArg);
+  encodedArg.clear();
+
+  return out;
 }
 
 Napi::Value Decode(const Napi::CallbackInfo& info)
@@ -86,7 +89,7 @@ Napi::Value Decode(const Napi::CallbackInfo& info)
 
   auto arg = info[0].As<Napi::String>().ToString();
 
-  std::string op = arg;
+  std::string op(arg);
 
   std::vector<base64::BYTE> decodedData = base64::decode(op);
 
@@ -129,4 +132,29 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
 NODE_API_MODULE(base64, Init)
 
 } // namespace addon
+
+// Here, we can extend the base64 source file with Napi overloads.
+
+// /**
+//  * @brief
+//  *
+//  * @param s
+//  * @return std::string
+//  */
+// std::string encode(const Napi::String& s) {
+//   return base64::_encode<Napi::String>(s);
+// }
+
+// /**
+//  * @brief
+//  *
+//  * @param s
+//  * @return std::vector<base64::BYTE>
+//  */
+// std::vector<base64::BYTE> decode(const Napi::String& s) {
+//   return base64::_decode<Napi::String>(s);
+// }
+// template std::string base64::encode(const Napi::String& s);
+// template std::vector<base64::BYTE> base64::decode(const Napi::String& s);
+
 } // namespace base64

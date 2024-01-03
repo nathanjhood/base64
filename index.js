@@ -25,9 +25,11 @@ console.log(base64.encode("foobar"));
 console.log(base64.encode(""));
 
 // decoder test
+// console.log(base64.decode(""));
 console.log(base64.decode("Zg=="));
 console.log(base64.decode("Zm8="));
 console.log(base64.decode("Zm9v"));
 console.log(base64.decode("Zm9vYg=="));
 console.log(base64.decode("Zm9vYmE="));
 console.log(base64.decode("Zm9vYmFy"));
+// console.log(base64.decode(""));
