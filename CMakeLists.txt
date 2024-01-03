@@ -65,12 +65,42 @@ target_sources(${PROJECT_NAME} PRIVATE ${SOURCE_FILES})
 # Add the target to the list
 list(APPEND TARGETS ${PROJECT_NAME})
 
-## Command Line
+#[==[
+  NodeJs C++ Addon
+]==]
+if (-DBUILDING_NODE_EXTENSION IN_LIST CMAKE_CXX_FLAGS)
+  # Include Node-API headers
+  include(GetNodeAPIHeaders)
 
-configure_file("include/${PROJECT_NAME}/cli.hpp" "include/${PROJECT_NAME}/cli.hpp")
-add_library(cli SHARED)
-add_library(${PROJECT_NAME}::cli ALIAS cli)
-set_target_properties(cli
+  # Include Node-API wrappers
+  include(GetNodeAPIWrappers)
+
+  message (STATUS "Building NodeJs addon")
+  add_library (addon SHARED)
+  add_library (${PROJECT_NAME}::addon ALIAS addon)
+  target_include_directories (addon
+    PUBLIC
+      $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
+      $<INSTALL_INTERFACE:include>
+  )
+  target_include_directories (addon PRIVATE ${CMAKE_JS_INC})
+  target_sources (addon PRIVATE "src/${PROJECT_NAME}/addon.cpp" ${CMAKE_JS_SRC})
+  target_link_libraries (addon ${PROJECT_NAME} ${CMAKE_JS_LIB})
+  set_target_properties (addon
+    PROPERTIES
+    LIBRARY_OUTPUT_NAME "${PROJECT_NAME}"
+    PREFIX ""
+    SUFFIX ".node"
+    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+  )
+  list (APPEND TARGETS addon)
+  if (MSVC AND CMAKE_JS_NODELIB_DEF AND CMAKE_JS_NODELIB_TARGET)
+    execute_process (COMMAND ${CMAKE_AR} /def:${CMAKE_JS_NODELIB_DEF} /out:${CMAKE_JS_NODELIB_TARGET} ${CMAKE_STATIC_LINKER_FLAGS})
+  endif ()
+endif ()
+
   PROPERTIES
   ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
   LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
