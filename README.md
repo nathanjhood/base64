@@ -7,6 +7,7 @@ $ base64 [OPTIONS] [FILE]...
 ```
 
 - [Usage](https://github.com/nathanjhood/base64/tree/main#usage)
+- [Goals](https://github.com/nathanjhood/base64/tree/main#goals)
 - [Examples](https://github.com/nathanjhood/base64/tree/main#examples)
 - [About](https://github.com/nathanjhood/base64/tree/main#about)
 - [Build from source](https://github.com/nathanjhood/base64/tree/main#build-from-source)
@@ -72,6 +73,12 @@ $./build/bin/base64 -n -E tst.txt
      7  Zm9vYmFy$
      8  $
 ```
+
+## Goals
+
+My primary interest in this project is to extend functionality to include other algorithms and alphabets, such as Base32, Hex, etc, with a unified interface - or perhaps just a single interface, eventually - and implement a variety of hand-rolled alphabets as a Node C++ addon, beyond the standard ``atob()```.
+
+This project will serve as a workbench for certain aspects of the intended final application, mostly focusing on the underlying algorithm, as well as interfacing with it from other code - the provided CLI being one example of a possible consumer runtime, and NodeJs being another.
 
 ## Examples
 
@@ -357,9 +364,11 @@ Zm9vYmFy
 
 Due to this, and also some interest in implementing further encode/decode algorithms as well as implementing the entire package as NodeJs binary addons, this project will likely either be renamed, or deprecated in favor of a larger, more realized project.</i>
 
-Currently working on a switch argument for the different modes (encode, decode, possibly a 'diff' mode for testing, debugging, etc). Also adding the standard CLI flags (```--version```, ```--help```, ```--verbose```, etc) but without depending on ```getopt``` or any C library. Furthermore, colorization line numbers and line ending chars is already in the codebase, but will need a bit of system-detection logic to ensure that the end-user's terminal actually [supports colourized output](https://linux.die.net/man/5/terminfo).
+The CLI compiles into a shared library that the executable links with; this should probably be amended such that the CLI only gets baked into the executable and is not compiled into a seperate library, because the CLI is really part of the executable, *not* part of the base64 implementation, and is not really intended to be shared with other code.
 
-My primary interest in this project is to extend functionality to include other algorithms and alphabets, such as Base32, Hex, etc, with a unified interface - or perhaps just a single interface, eventually - and potentially to be used as a Node C++ addon.
+Currently working on a CLI switch argument for the different modes (encode, decode, possibly a 'diff' mode for testing, debugging, etc). Also adding the standard CLI flags (```--version```, ```--help```, ```--verbose```, etc) but without depending on ```getopt``` or any C library. Furthermore, colorization line numbers and line ending chars is already in the codebase, but will need a bit of system-detection logic to ensure that the end-user's terminal actually [supports colourized output](https://linux.die.net/man/5/terminfo). Finally, the CLI should also accept strings passed in as arguments, in place of any input file, if a certain flag is used.
+
+Windows support depends on defining a 'wmain()' entry in place of the usual 'main()', and parsing support for ```w_char``` type. Flags are sometimes prepended with a ```/``` instead of a ```-``` - depending on how much Windows integration is required. Many command line executables running on Windows terminals do accept the usual UNIX-style argument syntax, these days.
 
 ## Thanks for reading!
 
