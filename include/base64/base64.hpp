@@ -34,6 +34,13 @@
 #include <vector>
 #include <string>
 
+#if __has_include(<string_view>)
+ #define HAS_STRING_VIEW_H 1
+#else
+ #define HAS_STRING_VIEW_H 0
+ #warning "Warning: Cannot find '<string_view>' in the include path... using less secure <string> instead"
+#endif
+
 /**
  * @brief The base64 namespace.
  *

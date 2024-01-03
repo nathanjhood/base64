@@ -186,3 +186,7 @@ NODE_API_MODULE(base64, Init)
 // template std::vector<base64::BYTE> base64::decode(const Napi::String& s);
 
 } // namespace base64
+
+#else
+ #error "Warning: Cannot find '<napi.h>'"
+#endif // __has_include(<napi.h>) && BUILDING_NODE_EXTENSION
