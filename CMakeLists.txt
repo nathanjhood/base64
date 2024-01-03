@@ -5,14 +5,24 @@ set (CMAKE_MODULE_PATH
   "${CMAKE_MODULE_PATH}"
 )
 
-# Name of the project (will be the name of the plugin)
+#[==[
+  Project setup
+]==]
 project (base64 VERSION 1.0.0.0)
 
+# Use git to update version information
 include (WriteVersionFile)
 write_version_file ()
 include (WriteVersionHeader)
 write_version_header ()
 configure_file ("include/${PROJECT_NAME}/version.h" "include/${PROJECT_NAME}/version.h")
+
+# Start a list of targets to be built
+set (TARGETS)
+
+#[==[
+  Main project target: Shared library
+]==]
 
 # Add our headers to a list
 set (HEADERS)
@@ -20,6 +30,7 @@ list (APPEND HEADERS
   "include/${PROJECT_NAME}/${PROJECT_NAME}.hpp"
 )
 
+# Add out sources to a list
 set (SOURCE_FILES)
 file (GLOB SOURCE_FILES
   "src/${PROJECT_NAME}/${PROJECT_NAME}.cpp"
@@ -32,11 +43,6 @@ if (NOT ${PROJECT_SOURCE_DIR} EQUAL ${PROJECT_BINARY_DIR})
     configure_file ("${HEADER}" "${HEADER}")
   endforeach ()
 endif ()
-
-# Start a list of targets to be built
-set (TARGETS)
-
-## Shared library
 
 # Build a shared library named after the project
 # Alias it to the vendor namespace
@@ -66,15 +72,13 @@ target_sources (${PROJECT_NAME} PRIVATE ${SOURCE_FILES})
 list (APPEND TARGETS ${PROJECT_NAME})
 
 #[==[
-  NodeJs C++ Addon
+  Optional target: NodeJs C++ Addon (requires building from 'npm run build')
 ]==]
 if (-DBUILDING_NODE_EXTENSION IN_LIST CMAKE_CXX_FLAGS)
   # Include Node-API headers
-  include(GetNodeAPIHeaders)
-
+  include (GetNodeAPIHeaders)
   # Include Node-API wrappers
-  include(GetNodeAPIWrappers)
-
+  include (GetNodeAPIWrappers)
   message (STATUS "Building NodeJs addon")
   add_library (addon SHARED)
   add_library (${PROJECT_NAME}::addon ALIAS addon)
@@ -95,14 +99,14 @@ if (-DBUILDING_NODE_EXTENSION IN_LIST CMAKE_CXX_FLAGS)
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
   )
-  list (APPEND TARGETS addon)
   if (MSVC AND CMAKE_JS_NODELIB_DEF AND CMAKE_JS_NODELIB_TARGET)
     execute_process (COMMAND ${CMAKE_AR} /def:${CMAKE_JS_NODELIB_DEF} /out:${CMAKE_JS_NODELIB_TARGET} ${CMAKE_STATIC_LINKER_FLAGS})
   endif ()
+  list (APPEND TARGETS addon)
 endif ()
 
 #[==[
-  Command Line
+  Command Line Interface
 ]==]
 configure_file ("include/${PROJECT_NAME}/cli.hpp" "include/${PROJECT_NAME}/cli.hpp")
 add_library (cli SHARED)
@@ -125,7 +129,7 @@ target_link_libraries (cli ${PROJECT_NAME}::${PROJECT_NAME})
 list (APPEND TARGETS cli)
 
 #[==[
-  Executable
+  Executable target: Main
 ]==]
 # Create an exectable for testing
 add_executable (main)
@@ -140,9 +144,11 @@ set_target_properties (main
   PDB_OUTPUT_DIRECTORY     "${CMAKE_BINARY_DIR}/bin"
   OUTPUT_NAME ${PROJECT_NAME}
 )
-
-# Add the target to the list
 list (APPEND TARGETS main)
+
+#[==[
+  Export this configuration to share it with other CMake projects
+]==]
 
 # Collect and export targets
 set (${PROJECT_NAME}_TARGETS ${TARGETS} CACHE STRING "Targets to be built." FORCE)

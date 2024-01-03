@@ -6,6 +6,14 @@ Base64 encode/decode CLI in C++.
 $ base64 [OPTIONS] [FILE]...
 ```
 
+Base64 encode/decode functions in NodeJs.
+
+```.js
+import base64 from './base64.cjs'
+
+console.log(base64.encode("foobar"));
+```
+
 - [Usage](https://github.com/nathanjhood/base64/tree/main#usage)
 - [Goals](https://github.com/nathanjhood/base64/tree/main#goals)
 - [Examples](https://github.com/nathanjhood/base64/tree/main#examples)
@@ -329,6 +337,7 @@ Currently the NodeJS binary module implements both the ```encode()``` and ```dec
 ```.js
 // index.js
 
+import base64 from './base64.cjs'
 ...
 
 console.log(base64.encode(""));
@@ -343,7 +352,7 @@ console.log(base64.encode(""));
 ...
 ```
 
-Run ```$ node index.js``` to execute the test script:
+Run ```node ./index.js``` to execute the test script:
 
 ```
 ...
@@ -362,15 +371,15 @@ Zm9vYmFy
 
 ## Coming soon...
 
-<i>PLEASE NOTE: This project should not really be installed system-wide nor placed in your operating system's ```PATH```, due to the naming conflict with the actual system-level base64 implementation.
-
-Due to this, and also some interest in implementing further encode/decode algorithms as well as implementing the entire package as NodeJs binary addons, this project will likely either be renamed, or deprecated in favor of a larger, more realized project.</i>
+Currently working on a CLI switch argument for the different modes (encode, decode, possibly a 'diff' mode for testing, debugging, etc). Also adding the standard CLI flags (```--version```, ```--help```, ```--verbose```, etc) but without depending on ```getopt``` or any C library. Furthermore, colorization line numbers and line ending chars is already in the codebase, but will need a bit of system-detection logic to ensure that the end-user's terminal actually [supports colourized output](https://linux.die.net/man/5/terminfo). Finally, the CLI should also accept strings passed in as arguments, in place of any input file, if a certain flag is used.
 
 The CLI compiles into a shared library that the executable links with; this should probably be amended such that the CLI only gets baked into the executable and is not compiled into a seperate library, because the CLI is really part of the executable, *not* part of the base64 implementation, and is not really intended to be shared with other code.
 
-Currently working on a CLI switch argument for the different modes (encode, decode, possibly a 'diff' mode for testing, debugging, etc). Also adding the standard CLI flags (```--version```, ```--help```, ```--verbose```, etc) but without depending on ```getopt``` or any C library. Furthermore, colorization line numbers and line ending chars is already in the codebase, but will need a bit of system-detection logic to ensure that the end-user's terminal actually [supports colourized output](https://linux.die.net/man/5/terminfo). Finally, the CLI should also accept strings passed in as arguments, in place of any input file, if a certain flag is used.
-
 Windows support depends on defining a 'wmain()' entry in place of the usual 'main()', and parsing support for ```w_char``` type. Flags are sometimes prepended with a ```/``` instead of a ```-``` - depending on how much Windows integration is required. Many command line executables running on Windows terminals do accept the usual UNIX-style argument syntax, these days.
+
+<i>PLEASE NOTE: This project should not really be installed system-wide nor placed in your operating system's ```PATH```, due to the naming conflict with the actual system-level base64 implementation.
+
+Due to this, and also some interest in implementing further encode/decode algorithms as well as implementing the entire package as NodeJs binary addons, this project will likely either be renamed, or deprecated in favor of a larger, more realized project.</i>
 
 ## Thanks for reading!
 
@@ -383,4 +392,4 @@ Windows support depends on defining a 'wmain()' entry in place of the usual 'mai
 
 [https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c](https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c)
 
-[A more recent (version 2) revision of this algorithm is also publically available](https://renenyffenegger.ch/notes/development/Base64/Encoding-and-decoding-base-64-with-cpp/). My reasons for adapting an earlier version is because I intend to attempt several other encode/decode algorithms using a similar to this implementation, which has slightly less of the functionality specific only to base64 (for example, no base64 URL alphabet) and thus shall be more adaptable into other forms.
+[A more recent (version 2) revision of this algorithm is also publically available](https://renenyffenegger.ch/notes/development/Base64/Encoding-and-decoding-base-64-with-cpp/). My reasons for adapting an earlier version is because I intend to attempt several other encode/decode algorithms using a similar approach to this implementation, which has slightly less of the functionality tailored specifically for base64, and thus shall be more adaptable into other forms.
