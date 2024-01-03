@@ -22,16 +22,12 @@ namespace addon {
 
 Napi::Value Hello(const Napi::CallbackInfo& info)
 {
-  Napi::Env env = info.Env();
-
-  return Napi::String::New(env, "base64 is online!");
+  return Napi::String::New(info.Env(), "base64 is online!");
 }
 
 Napi::Value Version(const Napi::CallbackInfo& info)
 {
-  Napi::Env env = info.Env();
-
-  return Napi::String::New(env, base64_VERSION);
+  return Napi::String::New(info.Env(), base64_VERSION);
 }
 
 /**
