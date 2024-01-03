@@ -31,14 +31,14 @@ console.log(base64.encode(""));
 console.log("\nDecoder test:\n");
 
 // decoder test
-console.log(base64.decode("\n"));
-console.log(base64.decode("Zg==\n"));
-console.log(base64.decode("Zm8=\n"));
-console.log(base64.decode("Zm9v\n"));
-console.log(base64.decode("Zm9vYg==\n"));
-console.log(base64.decode("Zm9vYmE=\n"));
-console.log(base64.decode("Zm9vYmFy\n"));
-console.log(base64.decode("\n"));
+// console.log(base64.decode(""));
+console.log(base64.decode("Zg=="));
+console.log(base64.decode("Zm8="));
+console.log(base64.decode("Zm9v"));
+console.log(base64.decode("Zm9vYg=="));
+console.log(base64.decode("Zm9vYmE="));
+console.log(base64.decode("Zm9vYmFy"));
+// console.log(base64.decode(""));
 
 console.log("\nEncoder URL alphabet test:\n");
 
