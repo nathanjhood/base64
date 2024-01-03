@@ -44,13 +44,22 @@ Napi::Value Encode(const Napi::CallbackInfo& info)
 {
   Napi::Env env = info.Env();
 
+  // Arguments required: at least one, and no more than two
   if (info.Length() < 1)
   {
     Napi::TypeError::New(env, "Wrong number of arguments").ThrowAsJavaScriptException();
     return env.Null();
   }
 
+  // Param 1 must be the string to encode
   if (!info[0].IsString())
+  {
+    Napi::TypeError::New(env, "Wrong arguments").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+
+  // Param 2 (if any) must be boolean. If unset, non-URL alphabet is used.
+  if (!info[1].IsBoolean() && info.Length() > 1)
   {
     Napi::TypeError::New(env, "Wrong arguments").ThrowAsJavaScriptException();
     return env.Null();
@@ -58,10 +67,11 @@ Napi::Value Encode(const Napi::CallbackInfo& info)
 
   // Construct a string to hold the encoder's output
   std::string encodedArg;
+  bool urlMode = info[1];
 
   // Try to encode the string
   try {
-    encodedArg = base64::encode(info[0].As<Napi::String>());
+    encodedArg = base64::encode(info[0].As<Napi::String>(), urlMode);
   } catch (const std::exception &x) {
     std::string message(x.what());
     message += '\n';
