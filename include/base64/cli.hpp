@@ -62,6 +62,7 @@ typedef Mode MODE;
 // magenta      35         45
 // cyan         36         46
 // white        37         47
+
 const std::string black  ("\033[0;30m");
 const std::string red    ("\033[0;31m");
 const std::string green  ("\033[0;32m");
@@ -77,6 +78,7 @@ const std::string white  ("\033[0;37m");
 // bold/bright off  21
 // underline off    24
 // inverse off      27
+
 const std::string reset    ("\033[0m");
 const std::string bold     ("\033[1m");
 const std::string underline("\033[4m");
@@ -90,6 +92,15 @@ const std::string inverse  ("\033[7m");
  * @param argv
  */
 void parse(int argc, char* argv[]);
+
+/**
+ * @brief
+ *
+ * @param argc
+ * @param argv
+ * @return int \code EXIT_SUCCESS || EXIT_FAILURE \endcode
+ */
+int process(int argc, char **argv);
 
 /**
  * @brief
@@ -113,6 +124,14 @@ bool show_ends();
  * @return false
  */
 bool show_line_numbers();
+
+/**
+ * @brief
+ * TODO:
+ * @return true
+ * @return false
+ */
+bool show_verbose();
 
 /**
  * @brief

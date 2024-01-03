@@ -29,9 +29,11 @@
  */
 
 #include "base64/cli.hpp"
+#include "base64/base64.hpp"
 
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 
 namespace base64 {
 namespace cli {
@@ -43,6 +45,7 @@ static std::vector<std::string>       _input_files;
 static bool                           _show_line_numbers = false;
 static bool                           _show_ends         = false;
 
+static bool                           _show_verbose      = false;
 static bool                           _show_version      = false;
 static bool                           _show_help         = false;
 
@@ -79,9 +82,17 @@ void parse(int argc, char* argv[]) {
         continue;
       }
 
-      if (arg == "-n" || arg == "--number") {
+      if (arg == "--verbose") {
+        if (_show_verbose) {
+          throw std::runtime_error("base64: cannot use --verbose parameter twice!");
+        }
+        _show_verbose = true;
+        continue;
+      }
+
+      if (arg == "-n" || arg == "--number" || arg == "--show-lines") {
         if (_show_line_numbers) {
-          throw std::runtime_error("base64: cannot use -n/--number parameter twice!");
+          throw std::runtime_error("base64: cannot use -n/--number/--show-lines parameter twice!");
         }
         _show_line_numbers = true;
         continue;
@@ -105,6 +116,109 @@ void parse(int argc, char* argv[]) {
   }
 }
 
+int process(int argc, char* argv[]) {
+
+  bool ok = true;
+
+  // Parse command-line arguments...
+  try {
+    base64::cli::parse(argc, argv);
+  } catch (const std::exception &x) {
+    std::cerr << x.what() << '\n';
+    std::cerr << "usage: base64 [-n|--number] [-E|--show-ends] <input_file> ...\n";
+    return EXIT_FAILURE;
+  }
+
+  // Return the files that were passed in to 'parse()'
+  // and iterate through them...
+  for (const auto &file_name : base64::cli::input_files()) {
+
+    std::ifstream input_file(file_name.data(), std::ios::in);
+
+    // Error if file cannot be opened for any reason...
+    if (!input_file.is_open()) {
+      std::cerr << "base64: could not open input file '" << file_name << "'!\n";
+      return EXIT_FAILURE;
+    }
+
+    std::string line;
+    int         line_count = 1;
+
+    // TODO: 'Mode' == ENCODE {...
+    while (std::getline(input_file, line)) {
+
+      if (base64::cli::show_line_numbers()) {
+        std::cout << std::setw(6) << std::setfill(' ') << line_count++ << "  ";
+      }
+
+      // Encode it (note: new string per line found)...
+      std::string encodedData;
+      encodedData.reserve(line.size());
+      try {
+        encodedData += base64::encode(line);
+      } catch (const std::exception &x) {
+        std::cerr << x.what() << '\n';
+        std::cerr << "base64: could not encode input file '" << file_name << "'!\n";
+        return EXIT_FAILURE;
+      }
+
+      // This is the main print-out to stdout
+      // std::cout << encodedData.data();
+      for (auto x : encodedData)
+        std::cout << x;
+
+      if (base64::cli::show_ends()) {
+        std::cout << '$';
+      }
+
+      std::cout << '\n';
+
+      encodedData.clear();
+    }
+
+    // // // TODO: 'Mode' == DECODE {...
+    // while (std::getline(input_file, line)) {
+
+    //   if (base64::cli::show_line_numbers()) {
+    //     std::cout << std::setw(6) << std::setfill(' ') << line_count++ << "  ";
+    //   }
+
+    //   // Store some data...
+    //   // std::vector<base64::BYTE> myData;
+    //   std::vector<base64::BYTE> decodedData;
+
+    //   try {
+    //     for (auto i = line.begin(); i != line.end(); i++)
+    //     {
+    //       // myData.push_back(*i);
+    //       decodedData = base64::decode(line);
+    //     }
+    //   } catch (const std::exception &x) {
+    //     std::cerr << x.what() << '\n';
+    //     std::cerr << "base64: could not decode input file '" << file_name << "'!\n";
+    //     return EXIT_FAILURE;
+    //   }
+
+    //   // This is the main print-out to stdout
+    //   for (auto x : decodedData)
+    //       std::cout << x;
+
+    //   if (base64::cli::show_ends()) {
+    //     std::cout << '$';
+    //   }
+
+    //   std::cout << '\n';
+
+    //   decodedData.clear();
+    // }
+
+    line.clear();
+    input_file.close();
+  }
+
+  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
+}
+
 void set_mode(const base64::cli::MODE& m) {
   _mode = m;
   _mode_is_set = true;
@@ -126,9 +240,14 @@ bool show_line_numbers() {
   return _show_line_numbers;
 }
 
+bool show_verbose() {
+  return _show_verbose;
+}
+
 bool show_version() {
   return _show_version;
 }
+
 bool show_help() {
   return _show_help;
 }
