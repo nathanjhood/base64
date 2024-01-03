@@ -5,11 +5,16 @@
   "author": "StoneyDSP <nathanjhood@googlemail.com>",
   "license": "MIT",
   "type": "module",
+  "types": "./types.d.ts",
+  "exports": {
+    "base64": "./base64.cjs"
+  },
   "scripts": {
     "postinstall": "cmake-js compile",
     "configure": "cmake-js configure",
     "reconfigure": "cmake-js reconfigure",
     "build": "cmake-js build",
+    "postbuild": "cp base64.node.d.ts ./build/lib/base64.node.d.ts",
     "rebuild": "cmake-js rebuild",
     "clean": "cmake-js clean",
     "wipe": "cmake-js clean && rm -rvf ./node_modules",
@@ -20,5 +25,11 @@
     "cmake-js": "^7.2.1",
     "node-addon-api": "^7.0.0",
     "node-api-headers": "^1.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "ts-add-js-extension": "^1.6.0",
+    "tsc-alias": "^1.8.8",
+    "typescript": "^5.3.3"
   }
 }
