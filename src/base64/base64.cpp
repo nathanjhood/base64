@@ -36,11 +36,16 @@ namespace base64 {
  * @brief The base64 alphabet (non-URL).
  *
  */
-static const std::string alphabet =
+static const char* alphabet[2] = {
   "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
   "abcdefghijklmnopqrstuvwxyz"
   "0123456789"
-  "+/";
+  "+/",
+
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  "abcdefghijklmnopqrstuvwxyz"
+  "0123456789"
+  "-_"};
 
 /**
  * @brief
@@ -84,18 +89,20 @@ template <typename Str>
  *
  * @note This is a static method (no header signature declaration).
  */
-static std::string _encode(Str s)
+static std::string _encode(Str s, bool url = false)
 {
-  return base64::encode(reinterpret_cast<const base64::BYTE*>(s.data()), s.length());
+  return base64::encode(reinterpret_cast<const base64::BYTE*>(s.data()), s.length(), url);
 }
 
-std::string encode(const base64::BYTE* buf, unsigned int bufLen) {
+std::string encode(const base64::BYTE* buf, unsigned int bufLen, bool url) {
 
   std::string out;
   int i = 0;
   int j = 0;
   base64::BYTE stream[3];
   base64::BYTE index[4];
+
+  const char* base64_alphabet_ = base64::alphabet[url];
 
   out.reserve(bufLen);
 
@@ -104,10 +111,10 @@ std::string encode(const base64::BYTE* buf, unsigned int bufLen) {
     stream[i++] = *(buf++);
 
     if (i == 3) {
-      index[0] = base64::alphabet[( to_unsigned_char(stream[0]) >> 2)                                       & 0x3f];
-      index[1] = base64::alphabet[((to_unsigned_char(stream[0]) << 4) + (to_unsigned_char(stream[1]) >> 4)) & 0x3f];
-      index[2] = base64::alphabet[((to_unsigned_char(stream[1]) << 2) + (to_unsigned_char(stream[2]) >> 6)) & 0x3f];
-      index[3] = base64::alphabet[  to_unsigned_char(stream[2])                                             & 0x3f];
+      index[0] = base64_alphabet_[( to_unsigned_char(stream[0]) >> 2)                                       & 0x3f];
+      index[1] = base64_alphabet_[((to_unsigned_char(stream[0]) << 4) + (to_unsigned_char(stream[1]) >> 4)) & 0x3f];
+      index[2] = base64_alphabet_[((to_unsigned_char(stream[1]) << 2) + (to_unsigned_char(stream[2]) >> 6)) & 0x3f];
+      index[3] = base64_alphabet_[  to_unsigned_char(stream[2])                                             & 0x3f];
 
       for(i = 0; (i < 4) ; i++)
         out += index[i];
@@ -120,10 +127,10 @@ std::string encode(const base64::BYTE* buf, unsigned int bufLen) {
     for(j = i; j < 3; j++)
       stream[j] = '\0';
 
-    index[0] = base64::alphabet[( to_unsigned_char(stream[0]) >> 2)                                        & 0x3f];
-    index[1] = base64::alphabet[((to_unsigned_char(stream[0]) << 4) + ( to_unsigned_char(stream[1]) >> 4)) & 0x3f];
-    index[2] = base64::alphabet[((to_unsigned_char(stream[1]) << 2) + ( to_unsigned_char(stream[2]) >> 6)) & 0x3f];
-    index[3] = base64::alphabet[  to_unsigned_char(stream[2])                                              & 0x3f];
+    index[0] = base64_alphabet_[( to_unsigned_char(stream[0]) >> 2)                                        & 0x3f];
+    index[1] = base64_alphabet_[((to_unsigned_char(stream[0]) << 4) + ( to_unsigned_char(stream[1]) >> 4)) & 0x3f];
+    index[2] = base64_alphabet_[((to_unsigned_char(stream[1]) << 2) + ( to_unsigned_char(stream[2]) >> 6)) & 0x3f];
+    index[3] = base64_alphabet_[  to_unsigned_char(stream[2])                                              & 0x3f];
 
     for (j = 0; (j < i + 1); j++)
       out += index[j];
@@ -155,6 +162,8 @@ static std::vector<base64::BYTE> _decode(const Str& encoded_string) {
   base64::BYTE stream[3];
   out.reserve(in_len);
 
+  std::string base64_alphabet(base64::alphabet[0]);
+
   while (in_len-- && (encoded_string[in_] != '=') && is_base64(encoded_string[in_])) {
 
     index[i++] = encoded_string[in_];
@@ -162,7 +171,7 @@ static std::vector<base64::BYTE> _decode(const Str& encoded_string) {
 
     if (i == 4) {
       for (i = 0; i < 4; i++)
-        index[i] = base64::alphabet.find(index[i]);
+        index[i] = base64_alphabet.find(index[i]);
 
       stream[0] = (to_unsigned_char(index[0]) << 2) + (to_unsigned_char(index[1]) >> 4);
       stream[1] = (to_unsigned_char(index[1]) << 4) + (to_unsigned_char(index[2]) >> 2);
@@ -179,7 +188,7 @@ static std::vector<base64::BYTE> _decode(const Str& encoded_string) {
       index[j] = 0;
 
     for (j = 0; j < 4; j++)
-      index[j] = base64::alphabet.find(index[j]);
+      index[j] = base64_alphabet.find(index[j]);
 
     stream[0] = (to_unsigned_char(index[0]) << 2) + (to_unsigned_char(index[1]) >> 4);
     stream[1] = (to_unsigned_char(index[1]) << 4) + (to_unsigned_char(index[2]) >> 2);
@@ -189,11 +198,13 @@ static std::vector<base64::BYTE> _decode(const Str& encoded_string) {
       out.emplace_back(stream[j]);
   }
 
+  base64_alphabet.clear();
+
   return out;
 }
 
-std::string encode(const std::string& s) {
-  return base64::_encode<std::string>(s);
+std::string encode(const std::string& s, bool url) {
+  return base64::_encode<std::string>(s, url);
 }
 
 std::vector<base64::BYTE> decode(const std::string& s) {
@@ -207,18 +218,18 @@ std::vector<base64::BYTE> decode(const std::vector<base64::BYTE>& s) {
 // Interfaces with std::string_view rather than const std::string&
 // Requires C++17
 #if __cplusplus >= 201703L
-std::string encode(const std::string_view& s) {
-  return base64::_encode<std::string_view>(s);
+std::string encode(std::string_view s, bool url) {
+  return base64::_encode<std::string_view>(s, url);
 }
-std::vector<base64::BYTE> decode(const std::string_view& s) {
+std::vector<base64::BYTE> decode(std::string_view s) {
   return base64::_decode<std::string_view>(s);
 }
 #endif
 
-template std::string _encode(const std::string& s);
+template std::string _encode(const std::string& s, bool url);
 template std::vector<base64::BYTE> _decode(const std::string& encoded_string);
 #if __cplusplus >= 201703L
-template std::string _encode(const std::string_view& s);
+template std::string _encode(const std::string_view& s, bool url);
 template std::vector<base64::BYTE> _decode(const std::string_view& encoded_string);
 #endif
 
