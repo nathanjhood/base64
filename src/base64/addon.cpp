@@ -34,6 +34,12 @@ Napi::Value Version(const Napi::CallbackInfo& info)
   return Napi::String::New(env, base64_VERSION);
 }
 
+/**
+ * @brief
+ *
+ * @param info
+ * @return Napi::Value
+ */
 Napi::Value Encode(const Napi::CallbackInfo& info)
 {
   Napi::Env env = info.Env();
@@ -50,27 +56,38 @@ Napi::Value Encode(const Napi::CallbackInfo& info)
     return env.Null();
   }
 
+  // Construct a string to hold the encoder's output
   std::string encodedArg;
 
+  // Try to encode the string
   try {
-    encodedArg = base64::encode(info[0].As<Napi::String>().ToString());
+    encodedArg = base64::encode(info[0].As<Napi::String>());
   } catch (const std::exception &x) {
-    const char* message = x.what();
-    // message += '\n';
-    // message += 'b', 'a', 's', 'e', '6', '4', ':';
-    // message += ' ', 'c', 'o', 'u', 'l', 'd', ' ', 'n', 'o', 't', ' ', 'd', 'e', 'c', 'o', 'd', 'e';
-    // message += ' ', 'i', 'n', 'p', 'u', 't', ' ', 'a', 'r', 'g', 'u', 'm', 'e', 'n', 't', ' ', '=', ' ';
-    // message + info[0].As<std::string>();
+    std::string message(x.what());
+    message += '\n';
+    message += "base64: could not encode the following input argument:\n";
+    message += info[0].As<Napi::String>();
     Napi::TypeError::New(env, message).ThrowAsJavaScriptException();
+    message.clear();
     return env.Null();;
   }
 
+  // Construct a Napi string containing the encoder output
   Napi::String out = Napi::String::New(env, encodedArg);
+
+  // Clear the old string
   encodedArg.clear();
 
+  // Return the Napi string
   return out;
 }
 
+/**
+ * @brief
+ *
+ * @param info
+ * @return Napi::Value
+ */
 Napi::Value Decode(const Napi::CallbackInfo& info)
 {
   Napi::Env env = info.Env();
@@ -87,18 +104,23 @@ Napi::Value Decode(const Napi::CallbackInfo& info)
     return env.Null();
   }
 
-  auto arg = info[0].As<Napi::String>().ToString();
+  std::vector<base64::BYTE> decodedArg;
 
-  std::string op(arg);
+  try {
+    decodedArg = base64::decode(info[0].As<Napi::String>());
+  } catch (const std::exception &x) {
+    std::string message(x.what());
+    message += '\n';
+    message += "base64: could not decode the following input argument:\n";
+    message += info[0].As<Napi::String>();
+    Napi::TypeError::New(env, message).ThrowAsJavaScriptException();
+    message.clear();
+    return env.Null();
+  }
 
-  std::vector<base64::BYTE> decodedData = base64::decode(op);
+  Napi::String out = Napi::String::New(env, (const char *)decodedArg.data());
 
-  const char* vec = (char *)decodedData.data();
-
-  auto out = Napi::String::New(env, vec);
-
-  op.clear();
-  decodedData.clear();
+  decodedArg.clear();
 
   return out;
 }
