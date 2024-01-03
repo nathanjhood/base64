@@ -42,7 +42,7 @@ foobar
 We can simply pass the file's location as an argument to base64 to get a readout:
 
 ```.sh
-$./build/bin/base64 tst.txt
+$ ./build/bin/base64 tst.txt
 
 Zg==
 Zm8=
@@ -55,7 +55,7 @@ Zm9vYmFy
 For further human readability, we can include the line numbers of the file with the ```-n``` (or ```---show-lines```) flag:
 
 ```.sh
-$./build/bin/base64 -n tst.txt
+$ ./build/bin/base64 -n tst.txt
      1
      2  Zg==
      3  Zm8=
@@ -71,7 +71,7 @@ As a result of this flag, we can clearly see that there are two empty lines in t
 In the case of more complex input/output files, it can also be helpful to report the line endings as ```$```. To do this, include the ```-E``` (or ```--show-ends```) flag:
 
 ```.sh
-$./build/bin/base64 -n -E tst.txt
+$ ./build/bin/base64 -n -E tst.txt
      1  $
      2  Zg==$
      3  Zm8=$
@@ -85,13 +85,13 @@ $./build/bin/base64 -n -E tst.txt
 You can also pass the ```--encode``` flag when you want to be specific:
 
 ```.sh
-$./build/bin/base64 --encode tst.txt >> out.txt
+$ ./build/bin/base64 --encode tst.txt >> out.txt
 ```
 
 To decode the data back again, just add the ```--decode``` flag:
 
 ```.sh
-$./build/bin/base64 --decode --show-lines --show-ends out.txt
+$ ./build/bin/base64 --decode --show-lines --show-ends out.txt
      1  $
      2  f$
      3  fo$
@@ -115,7 +115,7 @@ This project will serve as a workbench for certain aspects of the intended final
 Will parse almost any file type the OS can handle:
 
 ```.sh
-$ base64 icon__32x32.png
+$ ./build/bin/base64 icon__32x32.png
 
 iVBORw0=
 Gg==
@@ -125,16 +125,16 @@ AAAADUlIRFIAAAAgAAAAIAgGAAAAc3p69AAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAFzUkdCAK7OHOkA
 Can be useful for writing contents to new files by streaming:
 
 ```.sh
-$ base64 icon__32x32.png >> icon__32x32.png.base64.txt
+$ ./build/bin/base64 icon__32x32.png >> icon__32x32.png.base64.txt
 ```
 
 Accepts multiple files as arguments in a single command:
 
 ```.sh
-$ base64 package.json include/base64/base64.h
+$ ./build/bin/base64 package.json include/base64/base64.h
 
 
-file: package.json
+# file: package.json
 
 ew==
 ICAibmFtZSI6ICJiYXNlNjQiLA==
@@ -158,7 +158,7 @@ ICB9
 fQ==
 
 
-file: include/base64/base64.h
+# file: include/base64/base64.h
 
 Lyoq
 ICogQGZpbGUgYmFzZTY0Lmg=
