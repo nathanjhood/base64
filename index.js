@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import base64 from './base64.cjs'
 
 console.log(base64.hello());
