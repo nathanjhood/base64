@@ -53,6 +53,18 @@ namespace base64 {
  */
 typedef unsigned char BYTE;
 
+base64::BYTE to_byte(char c) {
+  return c;
+}
+
+base64::BYTE to_byte(unsigned char c) {
+  return c;
+}
+
+// static unsigned char to_unsigned_char(char c) {
+//   return c;
+// }
+
 /**
  * @brief Returns a base64-encoded std::string from an array (or std::vector) of unsigned chars.
  *
@@ -97,7 +109,7 @@ std::vector<base64::BYTE> decode(const std::string& s);
 
 // Interfaces with std::string_view rather than const std::string&
 // Requires C++17
-#if __cplusplus >= 201703L
+#if HAS_STRING_VIEW_H
 /**
  * @brief Returns a base64-encoded std::string from an std::string_view.
  *
@@ -118,7 +130,7 @@ std::string encode(std::string_view const& s, bool url = false);
  */
 std::vector<base64::BYTE> decode(std::string_view const& s); // overload (definition is static)
 
-#endif // __cplusplus >= 201703L
+#endif // HAS_STRING_VIEW_H
 
 } // namespace base64
 

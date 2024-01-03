@@ -9,12 +9,13 @@
  *
  */
 
+// Required header and C++ flag
+#if __has_include(<napi.h>) && BUILDING_NODE_EXTENSION
+
 #include "base64/version.h"
 #include "base64.cpp"
 
 #include <napi.h>
-
-// #pragma comment( lib, "base64" )
 
 namespace base64 {
 
@@ -62,7 +63,12 @@ Napi::Value Encode(const Napi::CallbackInfo& info)
   }
 
   // Construct a string to hold the encoder's output
+#if HAS_STRING_VIEW_H
+  std::string_view encodedArg;
+#else
   std::string encodedArg;
+#endif
+
   bool urlMode = info[1];
 
   // Try to encode the string
@@ -75,14 +81,16 @@ Napi::Value Encode(const Napi::CallbackInfo& info)
     message += info[0].As<Napi::String>();
     Napi::TypeError::New(env, message).ThrowAsJavaScriptException();
     message.clear();
-    return env.Null();;
+    return env.Null();
   }
 
   // Construct a Napi string containing the encoder output
-  Napi::String out = Napi::String::New(env, encodedArg);
+  Napi::String out = Napi::String::New(env, encodedArg.data());
 
+#if !HAS_STRING_VIEW_H
   // Clear the old string
   encodedArg.clear();
+#endif
 
   // Return the Napi string
   return out;
@@ -170,7 +178,7 @@ NODE_API_MODULE(base64, Init)
 //  * @return std::string
 //  */
 // std::string encode(const Napi::String& s) {
-//   return base64::_encode<Napi::String>(s);
+//   return base64::_encode<Napi::String>(s.As<std::string>());
 // }
 
 // /**
@@ -180,10 +188,23 @@ NODE_API_MODULE(base64, Init)
 //  * @return std::vector<base64::BYTE>
 //  */
 // std::vector<base64::BYTE> decode(const Napi::String& s) {
-//   return base64::_decode<Napi::String>(s);
+//   return base64::_decode<Napi::String>(s.As<std::string>());
 // }
 // template std::string base64::encode(const Napi::String& s);
 // template std::vector<base64::BYTE> base64::decode(const Napi::String& s);
+
+Napi::String byte_vector_to_napi_string(const std::vector<base64::BYTE>& b) {
+
+  auto in = (const char *)b.data();
+  Napi::String out;
+
+  return out;
+}
+
+static std::vector<base64::BYTE> napi_string_to_byte_vector(const Napi::String& s) {
+  std::vector<base64::BYTE> out;
+  return out;
+}
 
 } // namespace base64
 
