@@ -105,6 +105,20 @@ int process(int argc, char **argv);
 /**
  * @brief
  *
+ * @param m
+ */
+void set_mode(const base64::cli::MODE &m);
+
+/**
+ * @brief
+ *
+ * @return base64::cli::MODE
+ */
+base64::cli::MODE get_mode();
+
+/**
+ * @brief
+ *
  * @return const std::vector<std::string>&
  */
 const std::vector<std::string>& input_files();

@@ -105,6 +105,24 @@ void parse(int argc, char* argv[]) {
         _show_ends = true;
         continue;
       }
+
+      if (arg == "--encode") {
+        if (_mode_is_set) {
+          throw std::runtime_error("base64: cannot use --encode/--decode parameter twice!");
+        }
+        base64::cli::set_mode(base64::cli::ENCODE);
+        _mode_is_set = true;
+        continue;
+      }
+
+      if (arg == "--decode") {
+        if (_mode_is_set) {
+          throw std::runtime_error("base64: cannot use --encode/--decode parameter twice!");
+        }
+        base64::cli::set_mode(base64::cli::DECODE);
+        _mode_is_set = true;
+        continue;
+      }
     }
 
     if (!std::filesystem::exists(arg)) {
@@ -116,9 +134,84 @@ void parse(int argc, char* argv[]) {
   }
 }
 
+int encode(std::ifstream& input_file, std::string line, int line_count, const std::string &file_name) {
+
+  while (std::getline(input_file, line)) {
+
+    if (base64::cli::show_line_numbers()) {
+      std::cout << std::setw(6) << std::setfill(' ') << line_count++ << "  ";
+    }
+
+    // Encode it (note: new string per line found)...
+    std::string encodedData;
+    encodedData.reserve(line.size());
+
+    try {
+      encodedData += base64::encode(line);
+    } catch (const std::exception &x) {
+      std::cerr << x.what() << '\n';
+      std::cerr << "base64: could not encode input file '" << file_name << "'!\n";
+      return EXIT_FAILURE;
+    }
+
+    // This is the main print-out to stdout
+    for (auto x : encodedData)
+      std::cout << x;
+
+    if (base64::cli::show_ends()) {
+      std::cout << '$';
+    }
+
+    std::cout << '\n';
+
+    encodedData.clear();
+  }
+
+  return EXIT_SUCCESS;
+}
+
+int decode(std::ifstream& input_file, std::string line, int line_count, const std::string &file_name) {
+      // TODO: 'Mode' == DECODE {...
+  while (std::getline(input_file, line)) {
+
+    if (base64::cli::show_line_numbers()) {
+      std::cout << std::setw(6) << std::setfill(' ') << line_count++ << "  ";
+    }
+
+    // Store some data...
+    std::vector<base64::BYTE> decodedData;
+
+    try {
+      for (auto i = line.begin(); i != line.end(); i++)
+      {
+        // decodedData.push_back(*i);
+        decodedData = base64::decode(line);
+      }
+    } catch (const std::exception &x) {
+      std::cerr << x.what() << '\n';
+      std::cerr << "base64: could not decode input file '" << file_name << "'!\n";
+      return EXIT_FAILURE;
+    }
+
+    // This is the main print-out to stdout
+    for (auto x : decodedData)
+        std::cout << x;
+
+    if (base64::cli::show_ends()) {
+      std::cout << '$';
+    }
+
+    std::cout << '\n';
+
+    decodedData.clear();
+  }
+
+  return EXIT_SUCCESS;
+}
+
 int process(int argc, char* argv[]) {
 
-  bool ok = true;
+  int ok = 0;
 
   // Parse command-line arguments...
   try {
@@ -144,72 +237,25 @@ int process(int argc, char* argv[]) {
     std::string line;
     int         line_count = 1;
 
-    // TODO: 'Mode' == ENCODE {...
-    while (std::getline(input_file, line)) {
+    switch(base64::cli::get_mode()) {
 
-      if (base64::cli::show_line_numbers()) {
-        std::cout << std::setw(6) << std::setfill(' ') << line_count++ << "  ";
-      }
+      case base64::cli::ENCODE:
+      ok = encode(input_file, line, line_count, file_name);
+      break;
 
-      // Encode it (note: new string per line found)...
-      std::string encodedData;
-      encodedData.reserve(line.size());
-      try {
-        encodedData += base64::encode(line);
-      } catch (const std::exception &x) {
-        std::cerr << x.what() << '\n';
-        std::cerr << "base64: could not encode input file '" << file_name << "'!\n";
-        return EXIT_FAILURE;
-      }
+      case base64::cli::DECODE:
+      ok = decode(input_file, line, line_count, file_name);
+      break;
 
-      // This is the main print-out to stdout
-      // std::cout << encodedData.data();
-      for (auto x : encodedData)
-        std::cout << x;
-
-      if (base64::cli::show_ends()) {
-        std::cout << '$';
-      }
-
-      std::cout << '\n';
-
-      encodedData.clear();
+      default:
+      ok = encode(input_file, line, line_count, file_name);
+      break;
     }
 
-    // // // TODO: 'Mode' == DECODE {...
-    // while (std::getline(input_file, line)) {
-
-    //   if (base64::cli::show_line_numbers()) {
-    //     std::cout << std::setw(6) << std::setfill(' ') << line_count++ << "  ";
-    //   }
-
-    //   // Store some data...
-    //   // std::vector<base64::BYTE> myData;
-    //   std::vector<base64::BYTE> decodedData;
-
-    //   try {
-    //     for (auto i = line.begin(); i != line.end(); i++)
-    //     {
-    //       // myData.push_back(*i);
-    //       decodedData = base64::decode(line);
-    //     }
-    //   } catch (const std::exception &x) {
-    //     std::cerr << x.what() << '\n';
-    //     std::cerr << "base64: could not decode input file '" << file_name << "'!\n";
-    //     return EXIT_FAILURE;
-    //   }
-
-    //   // This is the main print-out to stdout
-    //   for (auto x : decodedData)
-    //       std::cout << x;
-
-    //   if (base64::cli::show_ends()) {
-    //     std::cout << '$';
-    //   }
-
-    //   std::cout << '\n';
-
-    //   decodedData.clear();
+    // if (base64::cli::get_mode() == base64::cli::DECODE) {
+    //   ok = decode(input_file, line, line_count, file_name);
+    // } else {
+    //   ok = encode(input_file, line, line_count, file_name);
     // }
 
     line.clear();
