@@ -82,6 +82,22 @@ $./build/bin/base64 -n -E tst.txt
      8  $
 ```
 
+To decode the data back again, just add the ```--decode``` flag:
+
+```.sh
+$./build/bin/base64 -n -E --decode tst.txt
+     1  $
+     2  f$
+     3  fo$
+     4  foo$
+     5  foob$
+     6  fooba$
+     7  foobar$
+     8  $
+```
+
+You can also pass the ```--encode``` flag when you want to be specific; only one mode - encode or decode - can be specified per run, and if neither flag is passed, then the encode function will be selected by default.
+
 ## Goals
 
 My primary interest in this project is to extend functionality to include other algorithms and alphabets, such as Base32, Hex, etc, with a unified interface - or perhaps just a single interface, eventually - and implement a variety of hand-rolled alphabets as a Node C++ addon, beyond the standard ```atob()```.
@@ -94,9 +110,6 @@ Will parse almost any file type the OS can handle:
 
 ```.sh
 $ base64 icon__32x32.png
-
-
-file: icon__32x32.png
 
 iVBORw0=
 Gg==
@@ -371,7 +384,7 @@ Zm9vYmFy
 
 ## Coming soon...
 
-Currently working on a CLI switch argument for the different modes (encode, decode, possibly a 'diff' mode for testing, debugging, etc). Also adding the standard CLI flags (```--version```, ```--help```, ```--verbose```, etc) but without depending on ```getopt``` or any C library. Furthermore, colorization line numbers and line ending chars is already in the codebase, but will need a bit of system-detection logic to ensure that the end-user's terminal actually [supports colourized output](https://linux.die.net/man/5/terminfo). Finally, the CLI should also accept strings passed in as arguments, in place of any input file, if a certain flag is used.
+Currently working on adding the standard CLI flags (```--version```, ```--help```, ```--verbose```, etc) but without depending on ```getopt``` or any C library. Also enhancing the CLI switch argument for the different modes (encode, decode, possibly a 'diff' mode for testing, debugging, etc). Furthermore, colorization line numbers and line ending chars is already in the codebase, but will need a bit of system-detection logic to ensure that the end-user's terminal actually [supports colourized output](https://linux.die.net/man/5/terminfo). Finally, the CLI should also accept strings passed in as arguments, in place of any input file, if a certain flag is used.
 
 The CLI compiles into a shared library that the executable links with; this should probably be amended such that the CLI only gets baked into the executable and is not compiled into a seperate library, because the CLI is really part of the executable, *not* part of the base64 implementation, and is not really intended to be shared with other code.
 
