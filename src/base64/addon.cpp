@@ -87,16 +87,25 @@ Napi::Value Encode(const Napi::CallbackInfo& info)
     return env.Null();
   }
 
-  // Construct a Napi string containing the encoder output
-  Napi::String out = Napi::String::New(env, encodedArg.data());
-
+  try {
+    // Construct a Napi string containing the encoder output
+    Napi::String out = Napi::String::New(env, encodedArg.data());
 #if !HAS_STRING_VIEW_H
-  // Clear the old string
-  encodedArg.clear();
+    // Clear the old string
+    encodedArg.clear();
 #endif
-
-  // Return the Napi string
-  return out;
+    // Return the Napi string
+    return out;
+  } catch (const std::exception &x) {
+    // If there was an error...
+    std::string message(x.what());
+    message += '\n';
+    message += "base64: could not encode the following input argument:\n";
+    message += info[0].As<Napi::String>();
+    Napi::TypeError::New(env, message).ThrowAsJavaScriptException();
+    message.clear();
+    return env.Null();
+  }
 }
 
 /**
@@ -142,27 +151,43 @@ Napi::Value Decode(const Napi::CallbackInfo& info)
     message += '\n';
     message += "base64: could not decode the following input argument:\n";
     message += info[0].As<Napi::String>();
+    // Throw a javascript-side exception
     Napi::TypeError::New(env, message).ThrowAsJavaScriptException();
     message.clear();
     return env.Null();
   }
 
-  // Construct a Napi string containing the decoder output
-  Napi::String out = Napi::String::New(env, reinterpret_cast<const char*>(decodedArg.data()));
-
-  // Clear the old array
-  decodedArg.clear();
-
-  // Return the string
-  return out;
+  try {
+    // Try to construct a Napi string containing the decoder output
+    Napi::String out = Napi::String::New(env, reinterpret_cast<const char *>(decodedArg.data()));
+    // Clear the old array
+    decodedArg.clear();
+    // Return the string
+    return out;
+  } catch (const std::exception &x) {
+    // If there was an error...
+    std::string message(x.what());
+    message += '\n';
+    message += "base64: could not construct the decoded argument into a string:\n";
+    message += info[0].As<Napi::String>();
+    // Throw a javascript-side exception
+    Napi::TypeError::New(env, message).ThrowAsJavaScriptException();
+    // Clear the old array
+    decodedArg.clear();
+    message.clear();
+    // Return null
+    return env.Null();
+  }
 }
 
+// Construct an 'initializer' object that carries our functions
 Napi::Object Init(Napi::Env env, Napi::Object exports)
 {
 
+  // Export a chosen C++ function under a given Javascript key
   exports.Set(
-    Napi::String::New(env, "hello"),
-    Napi::Function::New(env, Hello)
+    Napi::String::New(env, "hello"), // Name of function on Javascript side...
+    Napi::Function::New(env, Hello)  // Name of function on C++ side...
   );
 
   exports.Set(
@@ -180,10 +205,16 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
     Napi::Function::New(env, Decode)
   );
 
+  // The above will expose the C++ function 'Hello' as a javascript function named 'hello', etc...
+
   return exports;
 }
 
-NODE_API_MODULE(base64, Init)
+// Register a new addon with the intializer function defined above
+NODE_API_MODULE(base64, Init) // (name to use, initializer to use)
+
+// The above attaches the functions exported in 'Init()' to the name used in the fist argument.
+// The C++ functions are then obtainable on the Javascript side under e.g. 'base64.hello()'
 
 } // namespace addon
 
@@ -199,30 +230,6 @@ NODE_API_MODULE(base64, Init)
 //   return base64::_encode<Napi::String>(s.As<std::string>());
 // }
 // template std::string base64::encode(const Napi::String& s);
-
-// /**
-//  * @brief
-//  *
-//  * @param s
-//  * @return std::vector<base64::BYTE>
-//  */
-// std::vector<base64::BYTE> decode(const Napi::String& s) {
-//   return base64::_decode<Napi::String>(s.As<std::string>());
-// }
-// template std::vector<base64::BYTE> base64::decode(const Napi::String& s);
-
-Napi::String byte_vector_to_napi_string(const std::vector<base64::BYTE>& b) {
-
-  auto in = (const char *)b.data();
-  Napi::String out;
-
-  return out;
-}
-
-static std::vector<base64::BYTE> napi_string_to_byte_vector(const Napi::String& s) {
-  std::vector<base64::BYTE> out;
-  return out;
-}
 
 } // namespace base64
 
