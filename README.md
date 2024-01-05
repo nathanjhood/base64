@@ -15,6 +15,8 @@ console.log(base64.encode("foobar"));
 ```
 
 - [Usage](https://github.com/nathanjhood/base64/tree/main#usage)
+  - [Command Line Interface](https://github.com/nathanjhood/base64/tree/main#command_line_interface)
+  - [NodeJs Interface](https://github.com/nathanjhood/base64/tree/main#nodejs_interface)
 - [Goals](https://github.com/nathanjhood/base64/tree/main#goals)
 - [Examples](https://github.com/nathanjhood/base64/tree/main#examples)
 - [About](https://github.com/nathanjhood/base64/tree/main#about)
@@ -25,6 +27,8 @@ console.log(base64.encode("foobar"));
 - [Acknowledgments](https://github.com/nathanjhood/base64/tree/main#acknowledgments)
 
 ## Usage
+
+### Command Line Interface
 
 Let's say we have a file on disk that we want to encode to base 64...
 
@@ -123,6 +127,83 @@ $ ./build/bin/base64 --encode --show-lines bar.txt
 ```
 
 *PLEASE NOTE: only one mode - encode or decode - can be specified per run, and if neither flag is passed, then the encode function will be selected by default.*
+
+### NodeJs Interface
+
+With npm:
+
+```.sh
+$ npm install && npm run start
+```
+
+With yarn:
+
+```.sh
+$ yarn && yarn start
+```
+
+Currently the NodeJS binary module implements both the ```encode()``` and ```decode()``` functions, which are exported from ```base64.cjs```. <b>Since the file input parsing is currently a part of the CLI implementation, the NodeJS module parses input strings, not files</b>. Just import/require ```base64``` from this file, and call the functions:
+
+```.js
+// index.js
+
+import base64 from './base64.cjs'
+...
+
+console.log(base64.encode(""));
+console.log(base64.encode("f"));
+console.log(base64.encode("fo"));
+console.log(base64.encode("foo"));
+console.log(base64.encode("foob"));
+console.log(base64.encode("fooba"));
+console.log(base64.encode("foobar"));
+console.log(base64.encode(""));
+
+...
+```
+
+Run ```node ./index.js``` to execute the test script:
+
+```
+...
+
+Zg==
+Zm8=
+Zm9v
+Zm9vYg==
+Zm9vYmE=
+Zm9vYmFy
+
+...
+```
+
+*PLEASE NOTE: the 'url' version of the base64 alphabet is much more well-suited for usage in tasks where javascript is often deployed.*
+
+Both functions also have an additional second parameter, 'urlMode' , which accepts a boolean value. Setting this parameter to 'true' will switch to the base64 alphabet; this alphabet supports URL-like strings:
+
+```.sh
+// encoder mode test - using non-url alphabet
+console.log(base64.encode("=", false));
+console.log(base64.encode("/", false));
+console.log(base64.encode("-", false));
+console.log(base64.encode("_ ", false));
+
+// encoder mode test - using url alphabet
+console.log(base64.encode("=", true));
+console.log(base64.encode("/", true));
+console.log(base64.encode("-", true));
+console.log(base64.encode("_", true));
+```
+
+You can also access the built CLI executable (and all of it's options) directly from the npm script:
+
+```.sh
+$ npm run base64 --encode --show-lines tst.txt
+
+// or...
+
+$ yarn base64 --encode --show-lines tst.txt
+```
 
 ## Goals
 
@@ -356,83 +437,6 @@ Install base64 *(coming soon)*:
 $ cmake --install build
 ```
 </s>
-
-## Additional support for NodeJs package managers
-
-With npm:
-
-```.sh
-$ npm install && npm run start
-```
-
-With yarn:
-
-```.sh
-$ yarn && yarn start
-```
-
-Currently the NodeJS binary module implements both the ```encode()``` and ```decode()``` functions, which are exported from ```base64.cjs```. <b>Since the file input parsing is currently a part of the CLI implementation, the NodeJS module parses input strings, not files</b>. Just import/require ```base64``` from this file, and call the functions:
-
-```.js
-// index.js
-
-import base64 from './base64.cjs'
-...
-
-console.log(base64.encode(""));
-console.log(base64.encode("f"));
-console.log(base64.encode("fo"));
-console.log(base64.encode("foo"));
-console.log(base64.encode("foob"));
-console.log(base64.encode("fooba"));
-console.log(base64.encode("foobar"));
-console.log(base64.encode(""));
-
-...
-```
-
-Run ```node ./index.js``` to execute the test script:
-
-```
-...
-
-Zg==
-Zm8=
-Zm9v
-Zm9vYg==
-Zm9vYmE=
-Zm9vYmFy
-
-...
-```
-
-*PLEASE NOTE: the 'url' version of the base64 alphabet is much more well-suited for usage in tasks where javascript is often deployed.*
-
-Both functions also have an additional second parameter, 'urlMode' , which accepts a boolean value. Setting this parameter to 'true' will switch to the base64 alphabet; this alphabet supports URL-like strings:
-
-```.sh
-// encoder mode test - using non-url alphabet
-console.log(base64.encode("=", false));
-console.log(base64.encode("/", false));
-console.log(base64.encode("-", false));
-console.log(base64.encode("_ ", false));
-
-// encoder mode test - using url alphabet
-console.log(base64.encode("=", true));
-console.log(base64.encode("/", true));
-console.log(base64.encode("-", true));
-console.log(base64.encode("_", true));
-```
-
-You can also access the built CLI executable (and all of it's options) directly from the npm script:
-
-```.sh
-$ npm run base64 --encode --show-lines tst.txt
-
-// or...
-
-$ yarn base64 --encode --show-lines tst.txt
-```
 
 ## Hacking
 
