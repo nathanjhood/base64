@@ -423,6 +423,38 @@ console.log(base64.encode("-", true));
 console.log(base64.encode("_", true));
 ```
 
+### "Where is 'napi.h'?"
+
+When building nthe NodeJS addon, your IDE might not recognize the ```<napi.h>``` file, even when building successfully. The file(s) you need should be in the ```node_modules``` directory, under 'node-api-headers' and 'node-addon-api'. You just need to add these two directories appropriately to your IDE's intellisense engine path.
+
+VSCode with C++ extension example:
+
+```.json
+// .vscode/c_cpp_properties.json
+{
+  "configurations": [
+    {
+      "name": "Linux",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "node_modules/node-addon-api",
+        "node_modules/node-api-headers/include"
+      ],
+      "defines": [],
+      "compilerPath": "/usr/bin/g++",
+      "cStandard": "c17",
+      "cppStandard": "c++14",
+      "intelliSenseMode": "linux-gcc-x64",
+      "configurationProvider": "ms-vscode.cmake-tools"
+    }
+  ],
+  "version": 4
+}
+
+```
+
+When building this project from the npm/yarn command, the package 'cmake-js' is invoked, which reads from the same build script ('CMakeLists.txt') as the CMake CLI does. However, cmake-js also passes an argument equivalent to ```-DCMAKE_CXX_FLAGS:STRING=-DBUILDING_NODE_EXTENSION```, which is used in the build script to detect that we are also building the node addon part of the script. You may also pass the above arg manually when building with CMake directly on the command line, as long as you have already done ```npm install```or ```yarn install```to acquire these headers; they should be found in the usual ```node_modules``` folder at the project root.
+
 ## Coming soon...
 
 Currently working on adding the standard CLI flags (```--version```, ```--help```, ```--verbose```, etc) but without depending on ```getopt``` or any C library. Also enhancing the CLI switch argument for the different modes (encode, decode, possibly a 'diff' mode for testing, debugging, etc). Furthermore, colorization line numbers and line ending chars is already in the codebase, but will need a bit of system-detection logic to ensure that the end-user's terminal actually [supports colourized output](https://linux.die.net/man/5/terminfo). Finally, the CLI should also accept strings passed in as arguments, in place of any input file, if a certain flag is used.
@@ -440,10 +472,11 @@ Due to this, and also some interest in implementing further encode/decode algori
 [Nathan J. Hood](https://github.com/nathanjhood)
 
 ## Acknowledgements:
+
 - ["The Base16, Base32, and Base64 Data Encodings"](https://datatracker.ietf.org/doc/html/rfc4648); S. Josefsson (Copyright (C) 2006 The Internet Society).
 
 - 'base64.cpp'; The central encode/decode algorithm is a slightly modified implementation taken from René Nyffenegger's 'base64.cpp' (Copyright (C) 2004-2008 René Nyffenegger) from the below discussion:
 
-[https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c](https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c)
+- [https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c](https://stackoverflow.com/questions/180947/base64-decode-snippet-in-c)
 
-[A more recent (version 2) revision of this algorithm is also publically available](https://renenyffenegger.ch/notes/development/Base64/Encoding-and-decoding-base-64-with-cpp/). My reasons for adapting an earlier version is because I intend to attempt several other encode/decode algorithms using a similar approach to this implementation, which has slightly less of the functionality tailored specifically for base64, and thus shall be more adaptable into other forms.
+- [A more recent (version 2) revision of this algorithm is also publically available](https://renenyffenegger.ch/notes/development/Base64/Encoding-and-decoding-base-64-with-cpp/). My reasons for adapting an earlier version is because I intend to attempt several other encode/decode algorithms using a similar approach to this implementation, which has slightly less of the functionality tailored specifically for base64, and thus shall be more adaptable into other forms.
