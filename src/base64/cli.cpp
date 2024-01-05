@@ -211,7 +211,7 @@ static int decode(std::ifstream& input_file, std::string line, int line_count, c
 
 int process(int argc, char* argv[]) {
 
-  int ok = 0;
+  int status = 0;
 
   // Parse command-line arguments...
   try {
@@ -240,15 +240,15 @@ int process(int argc, char* argv[]) {
     switch(base64::cli::get_mode())
     {
       case base64::cli::ENCODE:
-      ok = encode(input_file, line, line_count, file_name);
+      status = encode(input_file, line, line_count, file_name);
       break;
 
       case base64::cli::DECODE:
-      ok = decode(input_file, line, line_count, file_name);
+      status = decode(input_file, line, line_count, file_name);
       break;
 
       default:
-      ok = encode(input_file, line, line_count, file_name);
+      status = encode(input_file, line, line_count, file_name);
       break;
     }
 
@@ -256,7 +256,7 @@ int process(int argc, char* argv[]) {
     input_file.close();
   }
 
-  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
+  return status;
 }
 
 void set_mode(const base64::cli::MODE& m) {
