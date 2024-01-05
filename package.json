@@ -18,7 +18,8 @@
     "rebuild": "cmake-js rebuild",
     "clean": "cmake-js clean",
     "wipe": "cmake-js clean && rm -rvf ./node_modules",
-    "start": "node index.js"
+    "start": "node index.js",
+    "cli": "./build/bin/base64"
   },
   "dependencies": {
     "clang-format": "^1.8.0",
