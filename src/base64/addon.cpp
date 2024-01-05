@@ -142,9 +142,13 @@ Napi::Value Decode(const Napi::CallbackInfo& info)
   // Construct a fancy char array to hold the decoder's output
   std::vector<base64::BYTE> decodedArg;
 
+  // Set whether to use the URL alphabet or not...
+  // If an option was passed, use it. Else, set to 'false'.
+  bool urlMode = info[1] != NULL ? info[1] : false;
+
   try {
     // Try to decode the string
-    decodedArg = base64::decode(info[0].As<Napi::String>());
+    decodedArg = base64::decode(info[0].As<Napi::String>(), urlMode);
   } catch (const std::exception &x) {
     // If there was an error...
     std::string message(x.what());

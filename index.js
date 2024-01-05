@@ -40,15 +40,34 @@ console.log(base64.decode("Zm9vYmE="));
 console.log(base64.decode("Zm9vYmFy"));
 // console.log(base64.decode(""));
 
-console.log("\nEncoder URL alphabet test:\n");
 
 // encoder mode test
-console.log(base64.encode("=", false));
-console.log(base64.encode("/", false));
-console.log(base64.encode("-", false));
-console.log(base64.encode("_ ", false));
+console.log("\nEncoder non-URL alphabet test:\n");
 
-console.log(base64.encode("=", true));
-console.log(base64.encode("/", true));
-console.log(base64.encode("-", true));
-console.log(base64.encode("_", true));
+console.log("= %s", base64.encode("=", false));
+console.log("/ %s", base64.encode("/", false));
+console.log("- %s", base64.encode("-", false));
+console.log("_ %s", base64.encode("_ ", false));
+
+console.log("\nEncoder URL alphabet test:\n");
+
+console.log("= %s", base64.encode("=", true));
+console.log("/ %s", base64.encode("/", true));
+console.log("- %s", base64.encode("-", true));
+console.log("_ %s", base64.encode("_", true));
+
+
+// decoder mode test
+console.log("\nDecoder non-URL alphabet test:\n");
+
+console.log("PQ== %s", base64.decode("PQ==", false));
+console.log("Lw== %s", base64.decode("Lw==", false));
+console.log("LQ== %s", base64.decode("LQ==", false));
+console.log("XyA= %s", base64.decode("XyA= ", false));
+
+console.log("\nDecoder URL alphabet test:\n");
+
+console.log("PQ== %s", base64.decode("PQ==", true));
+console.log("Lw== %s", base64.decode("Lw==", true));
+console.log("LQ== %s", base64.decode("LQ==", true));
+console.log("Xw== %s", base64.decode("Xw==", true));

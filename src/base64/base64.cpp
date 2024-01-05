@@ -151,7 +151,7 @@ template <typename Str>
  *
  * @note This is a static method (no header signature declaration).
  */
-static std::vector<base64::BYTE> _decode(const Str& encoded_string) {
+static std::vector<base64::BYTE> _decode(const Str& encoded_string, bool url) {
 
   std::vector<base64::BYTE> out;
   int i = 0;
@@ -162,7 +162,7 @@ static std::vector<base64::BYTE> _decode(const Str& encoded_string) {
   base64::BYTE stream[3];
   out.reserve(in_len);
 
-  std::string base64_alphabet(base64::alphabet[0]);
+  std::string base64_alphabet(base64::alphabet[url]);
 
   while (in_len-- && (encoded_string[in_] != '=') && is_base64(encoded_string[in_])) {
 
@@ -207,12 +207,12 @@ std::string encode(const std::string& s, bool url) {
   return base64::_encode<std::string>(s, url);
 }
 
-std::vector<base64::BYTE> decode(const std::string& s) {
-  return base64::_decode<std::string>(s);
+std::vector<base64::BYTE> decode(const std::string& s, bool url) {
+  return base64::_decode<std::string>(s, url);
 }
 
-std::vector<base64::BYTE> decode(const std::vector<base64::BYTE>& s) {
-  return base64::_decode<std::vector<base64::BYTE>>(s);
+std::vector<base64::BYTE> decode(const std::vector<base64::BYTE>& s, bool url) {
+  return base64::_decode<std::vector<base64::BYTE>>(s, url);
 }
 
 // Interfaces with std::string_view rather than const std::string&
@@ -221,16 +221,16 @@ std::vector<base64::BYTE> decode(const std::vector<base64::BYTE>& s) {
 std::string encode(std::string_view s, bool url) {
   return base64::_encode<std::string_view>(s, url);
 }
-std::vector<base64::BYTE> decode(std::string_view s) {
-  return base64::_decode<std::string_view>(s);
+std::vector<base64::BYTE> decode(std::string_view s, bool url) {
+  return base64::_decode<std::string_view>(s, url);
 }
 #endif
 
 template std::string _encode(const std::string& s, bool url);
-template std::vector<base64::BYTE> _decode(const std::string& encoded_string);
+template std::vector<base64::BYTE> _decode(const std::string& encoded_string, bool url = false);
 #if HAS_STRING_VIEW_H
 template std::string _encode(const std::string_view& s, bool url);
-template std::vector<base64::BYTE> _decode(const std::string_view& encoded_string);
+template std::vector<base64::BYTE> _decode(const std::string_view& encoded_string, bool url = false);
 #endif
 
 } // namespace base64

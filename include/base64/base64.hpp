@@ -84,7 +84,7 @@ std::string encode(const base64::BYTE* buf, unsigned int bufLen, bool url = fals
  *
  * @note This signature is an overloaded function definition (the actual definition is static).
  */
-std::vector<base64::BYTE> decode(const std::vector<base64::BYTE>& s);
+std::vector<base64::BYTE> decode(const std::vector<base64::BYTE>& s, bool url = false);
 
 /**
  * @brief Returns a base64-encoded std::string from another std::string.
@@ -104,7 +104,7 @@ std::string encode(std::string const& s, bool url = false);
  *
  * @note This signature is an overloaded function definition (the actual definition is static).
  */
-std::vector<base64::BYTE> decode(const std::string& s);
+std::vector<base64::BYTE> decode(const std::string& s, bool url = false);
 
 
 // Interfaces with std::string_view rather than const std::string&
@@ -128,7 +128,7 @@ std::string encode(std::string_view const& s, bool url = false);
  *
  * @note This signature is an overloaded function definition (the actual definition is static).
  */
-std::vector<base64::BYTE> decode(std::string_view const& s); // overload (definition is static)
+std::vector<base64::BYTE> decode(std::string_view const& s, bool url = false); // overload (definition is static)
 
 #endif // HAS_STRING_VIEW_H
 
