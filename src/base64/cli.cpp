@@ -149,6 +149,7 @@ static int encode(std::ifstream& input_file, std::string line, int line_count, c
     try {
       encodedData += base64::encode(line);
     } catch (const std::exception &x) {
+      encodedData.clear();
       std::cerr << x.what() << '\n';
       std::cerr << "base64: could not encode input file '" << file_name << "'!\n";
       return EXIT_FAILURE;
@@ -184,10 +185,10 @@ static int decode(std::ifstream& input_file, std::string line, int line_count, c
     try {
       for (auto i = line.begin(); i != line.end(); i++)
       {
-        // decodedData.push_back(*i);
         decodedData = base64::decode(line);
       }
     } catch (const std::exception &x) {
+      decodedData.clear();
       std::cerr << x.what() << '\n';
       std::cerr << "base64: could not decode input file '" << file_name << "'!\n";
       return EXIT_FAILURE;
