@@ -424,6 +424,16 @@ console.log(base64.encode("-", true));
 console.log(base64.encode("_", true));
 ```
 
+You can also access the built CLI executable (and all of it's options) directly from the npm script:
+
+```.sh
+$ npm run base64 --encode --show-lines tst.txt
+
+// or...
+
+$ yarn base64 --encode --show-lines tst.txt
+```
+
 ## Hacking
 
 ### Trying to build the NodeJs addon manually?

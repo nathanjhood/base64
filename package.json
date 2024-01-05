@@ -19,7 +19,10 @@
     "clean": "cmake-js clean",
     "wipe": "cmake-js clean && rm -rvf ./node_modules",
     "start": "node index.js",
-    "cli": "./build/bin/base64"
+
+    "base64": "./build/bin/base64",
+    "base64:encode": "./build/bin/base64 --encode",
+    "base64:decode": "./build/bin/base64 --decode"
   },
   "dependencies": {
     "clang-format": "^1.8.0",
