@@ -462,7 +462,7 @@ If you are using nvm (node version manager), of have different Node installation
 
 When choosing to build an addon using the NodeJS C headers directly, you must build against the same NodeJS version that you intend to run on.
 
-The above is the primary reason why I have adapted a C++ base64 implementation, instead of a more common C implementation (such as GNU).
+The above is the primary reason why I have adapted a C++ base64 implementation, instead of a more common C implementation (such as GNU); you should not experience any issues with differing NodeJs versions and nvm when building this project, thanks to the NodeJs C++ addon's ABI stability.
 
 ### Trying to build the NodeJs addon manually?
 
