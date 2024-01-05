@@ -13,7 +13,7 @@
 #if __has_include(<napi.h>) && BUILDING_NODE_EXTENSION
 
 #include "base64/version.h"
-#include "base64.cpp"
+#include "base64/base64.hpp"
 
 #include <napi.h>
 

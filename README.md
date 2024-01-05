@@ -14,6 +14,8 @@ import base64 from './base64.cjs'
 console.log(base64.encode("foobar"));
 ```
 
+## Content
+
 - [Usage](https://github.com/nathanjhood/base64/tree/main#usage)
   - [Command Line Interface](https://github.com/nathanjhood/base64/tree/main#command_line_interface)
   - [NodeJs Interface](https://github.com/nathanjhood/base64/tree/main#nodejs_interface)
