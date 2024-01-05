@@ -171,7 +171,7 @@ int encode(std::ifstream& input_file, std::string line, int line_count, const st
 }
 
 int decode(std::ifstream& input_file, std::string line, int line_count, const std::string &file_name) {
-      // TODO: 'Mode' == DECODE {...
+
   while (std::getline(input_file, line)) {
 
     if (base64::cli::show_line_numbers()) {
@@ -237,8 +237,8 @@ int process(int argc, char* argv[]) {
     std::string line;
     int         line_count = 1;
 
-    switch(base64::cli::get_mode()) {
-
+    switch(base64::cli::get_mode())
+    {
       case base64::cli::ENCODE:
       ok = encode(input_file, line, line_count, file_name);
       break;
@@ -251,12 +251,6 @@ int process(int argc, char* argv[]) {
       ok = encode(input_file, line, line_count, file_name);
       break;
     }
-
-    // if (base64::cli::get_mode() == base64::cli::DECODE) {
-    //   ok = decode(input_file, line, line_count, file_name);
-    // } else {
-    //   ok = encode(input_file, line, line_count, file_name);
-    // }
 
     line.clear();
     input_file.close();

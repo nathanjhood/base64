@@ -31,6 +31,12 @@ Napi::Value Version(const Napi::CallbackInfo& info)
   return Napi::String::New(info.Env(), base64_VERSION);
 }
 
+// Napi::Value Test(const Napi::CallbackInfo& info)
+// {
+//   bool ok = base64::tst();
+//   return Napi::Boolean::New(info.Env(), ok);
+// }
+
 /**
  * @brief
  *
@@ -132,7 +138,7 @@ Napi::Value Decode(const Napi::CallbackInfo& info)
     return env.Null();
   }
 
-  Napi::String out = Napi::String::New(env, (const char *)decodedArg.data());
+  Napi::String out = Napi::String::New(env, reinterpret_cast<char*>(decodedArg.data()));
 
   decodedArg.clear();
 
@@ -151,6 +157,11 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
     Napi::String::New(env, "version"),
     Napi::Function::New(env, Version)
   );
+
+  // exports.Set(
+  //   Napi::String::New(env, "test"),
+  //   Napi::Function::New(env, Test)
+  // );
 
   exports.Set(
     Napi::String::New(env, "encode"),
