@@ -432,7 +432,7 @@ When building this project from the npm/yarn command, the package 'cmake-js' is 
 
 ### "Where is 'napi.h'?"
 
-When building the NodeJS addon, your IDE might not find the ```<napi.h>``` file, even when building successfully. The file(s) you need should be in the ```node_modules``` directory, under ```node-api-headers/include``` (C headers for NodeJs) and ```node-addon-api``` (C++ headers which wrap the C headers). The build script(s) will pick them up automatically, but your IDE might not. You just need to add these two directories appropriately to your IDE's intellisense engine path.
+When building the NodeJS addon, your IDE might not find the ```<napi.h>``` file, even when building successfully. The file(s) you need should be in the ```node_modules``` directory, under ```node-api-headers/include``` (C headers for NodeJs) and ```node-addon-api``` (C++ headers which wrap the C headers)\*. The build script(s) will pick them up automatically, but your IDE might not. You just need to add these two directories appropriately to your IDE's intellisense engine path.
 
 VSCode with C++ extension example:
 
@@ -460,7 +460,7 @@ VSCode with C++ extension example:
 
 ```
 
-Important distinction: ```<napi.h>``` is the C++ addon header, and is ABI-stable.
+\*Important distinction: ```<napi.h>``` is the C++ addon header, and is ABI-stable.
 
 If you are using nvm (node version manager), or have different Node installations on your system, NodeJs addons written using the NodeJS C headers will complain that the NodeJS version used during build is different to the one attempting to run the built module. The C++ addon header provides an ABI stability promise, which circumvents this issue.
 
