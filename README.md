@@ -483,11 +483,11 @@ VSCode with C++ extension example:
 
 ### Node versions, nvm, and ABI stability
 
-If you are using nvm (node version manager), or have different Node installations on your system, NodeJs addons written using the NodeJS C headers will complain that the NodeJS version used during build is different to the one attempting to run the built module. The C++ addon header provides an ABI stability promise, which circumvents this issue.
+If you are using nvm (node version manager), or have different Node installations on your system, Node addons written using the Node C headers will complain that the Node version used during build is different to the one attempting to run the built module. The C++ addon header provides an ABI stability promise, which circumvents this issue.
 
-When choosing to build an addon using the NodeJS C headers directly, you must build against the same NodeJS version that you intend to run on.
+When choosing to build an addon using the Node C headers directly, you must build against the same Node version that you intend to run on.
 
-The above is the primary reason why I have adapted a C++ base64 implementation, instead of a more common C implementation (such as GNU); you should not experience any issues with differing NodeJs versions and nvm when building this project, thanks to the NodeJs C++ addon's ABI stability.
+The above is the primary reason why I have adapted a C++ base64 implementation, instead of a more common C implementation (such as GNU); you should not experience any issues with differing Node versions and nvm when building this project, thanks to the Node C++ addon's ABI stability.
 
 ## Coming soon...
 
