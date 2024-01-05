@@ -21,7 +21,6 @@ console.log(base64.encode("foobar"));
 - [Examples](https://github.com/nathanjhood/base64/tree/main#examples)
 - [About](https://github.com/nathanjhood/base64/tree/main#about)
 - [Build from source](https://github.com/nathanjhood/base64/tree/main#build-from-source)
-- [Additional support for NodeJs package managers](https://github.com/nathanjhood/base64#additional-support-for-nodejs-package-managers)
 - [Hacking](https://github.com/nathanjhood/base64/tree/main#hacking)
 - [Coming Soon](https://github.com/nathanjhood/base64/tree/main#coming-soon)
 - [Acknowledgments](https://github.com/nathanjhood/base64/tree/main#acknowledgments)
