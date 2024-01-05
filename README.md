@@ -85,13 +85,13 @@ $ ./build/bin/base64 -n -E tst.txt
 You can also pass the ```--encode``` flag when you want to be specific:
 
 ```.sh
-$ ./build/bin/base64 --encode tst.txt >> out.txt
+$ ./build/bin/base64 --encode tst.txt >> foo.txt
 ```
 
 To decode the data back again, just add the ```--decode``` flag:
 
 ```.sh
-$ ./build/bin/base64 --decode --show-lines --show-ends out.txt
+$ ./build/bin/base64 --decode --show-lines --show-ends foo.txt
      1  $
      2  f$
      3  fo$
@@ -100,6 +100,25 @@ $ ./build/bin/base64 --decode --show-lines --show-ends out.txt
      6  fooba$
      7  foobar$
      8  $
+```
+
+To go full circle, just ```--decode``` back to a new file:
+
+```.sh
+$ ./build/bin/base64 --decode foo.txt >> bar.txt
+```
+
+And read it:
+
+```.sh
+$ ./build/bin/base64 --show-lines bar.txt
+     1
+     2  Zg==
+     3  Zm8=
+     4  Zm9v
+     5  Zm9vYg==
+     6  Zm9vYmE=
+     7  Zm9vYmFy
 ```
 
 *PLEASE NOTE: only one mode - encode or decode - can be specified per run, and if neither flag is passed, then the encode function will be selected by default.*
@@ -386,7 +405,23 @@ Zm9vYmFy
 ...
 ```
 
-*PLEASE NOTE: currently the decoder output might get a bit garbled when used as a NodeJs addon (not the CLI or actual implementation) - there are differences between the ```std::string``` family and the corresponding ```Napi::String``` class which require some further debugging - furthermore, the 'url' version of the base64 alphabet is much more well-suited for usage in tasks where javascript is often deployed. Watch this space.*
+*PLEASE NOTE: the 'url' version of the base64 alphabet is much more well-suited for usage in tasks where javascript is often deployed.*
+
+Both functions also have an additional second parameter, 'urlMode' , which accepts a boolean value. Setting this parameter to 'true' will switch to the base64 alphabet; this alphabet supports URL-like strings:
+
+```.sh
+// encoder mode test - using non-url alphabet
+console.log(base64.encode("=", false));
+console.log(base64.encode("/", false));
+console.log(base64.encode("-", false));
+console.log(base64.encode("_ ", false));
+
+// encoder mode test - using url alphabet
+console.log(base64.encode("=", true));
+console.log(base64.encode("/", true));
+console.log(base64.encode("-", true));
+console.log(base64.encode("_", true));
+```
 
 ## Coming soon...
 
