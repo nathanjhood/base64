@@ -134,7 +134,7 @@ void parse(int argc, char* argv[]) {
   }
 }
 
-int encode(std::ifstream& input_file, std::string line, int line_count, const std::string &file_name) {
+static int encode(std::ifstream& input_file, std::string line, int line_count, const std::string &file_name) {
 
   while (std::getline(input_file, line)) {
 
@@ -170,7 +170,7 @@ int encode(std::ifstream& input_file, std::string line, int line_count, const st
   return EXIT_SUCCESS;
 }
 
-int decode(std::ifstream& input_file, std::string line, int line_count, const std::string &file_name) {
+static int decode(std::ifstream& input_file, std::string line, int line_count, const std::string &file_name) {
 
   while (std::getline(input_file, line)) {
 
