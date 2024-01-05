@@ -30,7 +30,7 @@ console.log(base64.encode("foobar"));
 
 ### Command Line Interface
 
-*PLEASE NOTE: The following steps assume that you have [built the executable from the source code](https://github.com/nathanjhood/base64/tree/main#build-from-source) and it is located ```\<project folder\>/build/bin/base64```as per the provided build-script.*
+*PLEASE NOTE: The following steps assume that you have [built the executable from the source code](https://github.com/nathanjhood/base64/tree/main#build-from-source) and it is located ```<project folder>/build/bin/base64```as per the provided build-script.*
 
 Let's say we have a file on disk that we want to encode to base 64...
 
