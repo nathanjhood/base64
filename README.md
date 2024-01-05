@@ -462,6 +462,8 @@ VSCode with C++ extension example:
 
 \*Important distinction: ```<napi.h>``` is the C++ addon header, and is ABI-stable.
 
+### Node versions, nvm, and ABI stability
+
 If you are using nvm (node version manager), or have different Node installations on your system, NodeJs addons written using the NodeJS C headers will complain that the NodeJS version used during build is different to the one attempting to run the built module. The C++ addon header provides an ABI stability promise, which circumvents this issue.
 
 When choosing to build an addon using the NodeJS C headers directly, you must build against the same NodeJS version that you intend to run on.
