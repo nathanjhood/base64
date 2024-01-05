@@ -132,7 +132,7 @@ $ ./build/bin/base64 --encode --show-lines bar.txt
 
 ### NodeJs Interface
 
-*PLEASE NOTE: The following assumes that you have both a C++ compiler toolchain, and CMake, installed on your system. These commands will build the binary from the source code, which means the system requirements are the same as when [building from source](https://github.com/nathanjhood/base64/tree/main#build-from-source).*
+*PLEASE NOTE: The following assumes that you have both a C++ compiler toolchain, and CMake, installed on your system. These commands will build the binary from the source code, which means the system requirements are the same as when [building from source](https://github.com/nathanjhood/base64/tree/main#build-from-source), but those build steps are not required - see the below, instead.*
 
 Build and run with npm:
 
@@ -400,7 +400,7 @@ BASE64 DECODE:
 
 ## Build from source
 
-Requirements:
+System Requirements:
 - C++ compiler (GNU, MSVC...)
 - CMake
 - Ninja (optional/recommended)
