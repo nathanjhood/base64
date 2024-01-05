@@ -234,5 +234,5 @@ NODE_API_MODULE(base64, Init) // (name to use, initializer to use)
 } // namespace base64
 
 #else
- #error "Warning: Cannot find '<napi.h>'"
+ #warning "Warning: Cannot find '<napi.h>'"
 #endif // __has_include(<napi.h>) && BUILDING_NODE_EXTENSION
