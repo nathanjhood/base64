@@ -83,10 +83,10 @@ $ ./build/bin/base64 -n -E tst.txt
      8  $
 ```
 
-You can also pass the ```--encode``` flag when you want to be specific:
+You can write the output to a file on disk with the streaming operator (place ```>> name.ext``` after the command):
 
 ```.sh
-$ ./build/bin/base64 --encode tst.txt >> foo.txt
+$ ./build/bin/base64 tst.txt >> foo.txt
 ```
 
 To decode the data back again, just add the ```--decode``` flag:
@@ -109,10 +109,10 @@ To go full circle, just ```--decode``` back to a new file:
 $ ./build/bin/base64 --decode foo.txt >> bar.txt
 ```
 
-And read it:
+You can also pass the ```--encode``` flag when you want to be specific:
 
 ```.sh
-$ ./build/bin/base64 --show-lines bar.txt
+$ ./build/bin/base64 --encode --show-lines bar.txt
      1
      2  Zg==
      3  Zm8=
