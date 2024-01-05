@@ -5,7 +5,7 @@
   "author": "StoneyDSP <nathanjhood@googlemail.com>",
   "license": "MIT",
   "type": "module",
-  "types": "./types.d.ts",
+  "types": "./types/base64.d.ts",
   "exports": {
     "base64": "./base64.cjs"
   },
@@ -14,7 +14,7 @@
     "configure": "cmake-js configure",
     "reconfigure": "cmake-js reconfigure",
     "build": "cmake-js build",
-    "postbuild": "cp base64.node.d.ts ./build/lib/base64.node.d.ts",
+    "postbuild": "cp ./types/base64.node.d.ts ./build/lib/base64.node.d.ts",
     "rebuild": "cmake-js rebuild",
     "clean": "cmake-js clean",
     "wipe": "cmake-js clean && rm -rvf ./node_modules",
