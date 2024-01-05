@@ -426,9 +426,13 @@ console.log(base64.encode("_", true));
 
 ## Hacking
 
+### Trying to build the NodeJs addon manually?
+
+When building this project from the npm/yarn command, the package 'cmake-js' is invoked, which reads from the same build script (```CMakeLists.txt```) as the CMake CLI does. However, cmake-js also passes an argument equivalent to ```-DCMAKE_CXX_FLAGS:STRING=-DBUILDING_NODE_EXTENSION```, which is used in the build script to detect that we are also building the node addon part of the script. You may also pass the above arg manually when building with CMake directly on the command line, as long as you have already done ```npm install```or ```yarn``` to acquire these headers; they should be found in the usual ```node_modules``` folder at the project root. Note that the entire 'addon.cpp' is guarded by requiring ```napi.h``` to be found and ```BUILDING_NODE_EXTENSION``` to be defined. See the next section if you can't find ```napi.h```.
+
 ### "Where is 'napi.h'?"
 
-When building the NodeJS addon, your IDE might not recognize the ```<napi.h>``` file, even when building successfully. The file(s) you need should be in the ```node_modules``` directory, under ```node-api-headers/include``` (C headers for NodeJs) and ```node-addon-api``` (C++ headers which wrap the C headers). You just need to add these two directories appropriately to your IDE's intellisense engine path.
+When building the NodeJS addon, your IDE might not find the ```<napi.h>``` file, even when building successfully. The file(s) you need should be in the ```node_modules``` directory, under ```node-api-headers/include``` (C headers for NodeJs) and ```node-addon-api``` (C++ headers which wrap the C headers). The build script(s) will pick them up automatically, but your IDE might not. You just need to add these two directories appropriately to your IDE's intellisense engine path.
 
 VSCode with C++ extension example:
 
@@ -463,10 +467,6 @@ If you are using nvm (node version manager), or have different Node installation
 When choosing to build an addon using the NodeJS C headers directly, you must build against the same NodeJS version that you intend to run on.
 
 The above is the primary reason why I have adapted a C++ base64 implementation, instead of a more common C implementation (such as GNU); you should not experience any issues with differing NodeJs versions and nvm when building this project, thanks to the NodeJs C++ addon's ABI stability.
-
-### Trying to build the NodeJs addon manually?
-
-When building this project from the npm/yarn command, the package 'cmake-js' is invoked, which reads from the same build script (```CMakeLists.txt```) as the CMake CLI does. However, cmake-js also passes an argument equivalent to ```-DCMAKE_CXX_FLAGS:STRING=-DBUILDING_NODE_EXTENSION```, which is used in the build script to detect that we are also building the node addon part of the script. You may also pass the above arg manually when building with CMake directly on the command line, as long as you have already done ```npm install```or ```yarn``` to acquire these headers; they should be found in the usual ```node_modules``` folder at the project root.
 
 ## Coming soon...
 
