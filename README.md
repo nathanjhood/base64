@@ -30,6 +30,8 @@ console.log(base64.encode("foobar"));
 
 ### Command Line Interface
 
+*PLEASE NOTE: The following steps assume that you have [built the executable from the source code](https://github.com/nathanjhood/base64/tree/main#build-from-source) and it is located ```\<project folder\>/build/bin/base64```as per the provided build-script.*
+
 Let's say we have a file on disk that we want to encode to base 64...
 
 ```.sh
@@ -130,17 +132,21 @@ $ ./build/bin/base64 --encode --show-lines bar.txt
 
 ### NodeJs Interface
 
-With npm:
+*PLEASE NOTE: The following assumes that you have both a C++ compiler toolchain, and CMake, installed on your system. These commands will build the binary from the source code, which means the system requirements are the same as when [building from source](https://github.com/nathanjhood/base64/tree/main#build-from-source).*
+
+Build and run with npm:
 
 ```.sh
 $ npm install && npm run start
 ```
 
-With yarn:
+Or, build and run with yarn:
 
 ```.sh
 $ yarn && yarn start
 ```
+
+The above commands will build the NodeJs module from source, then execute the contents of ```index.js``` which serves as a demonstration.
 
 Currently the NodeJS binary module implements both the ```encode()``` and ```decode()``` functions, which are exported from ```base64.cjs```. <b>Since the file input parsing is currently a part of the CLI implementation, the NodeJS module parses input strings, not files</b>. Just import/require ```base64``` from this file, and call the functions:
 
