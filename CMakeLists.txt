@@ -5,9 +5,9 @@ set (CMAKE_MODULE_PATH
   "${CMAKE_MODULE_PATH}"
 )
 
-#[==[
+#[===========================================================================[
   Project setup
-]==]
+]===========================================================================]#
 project (base64 VERSION 1.0.0.0)
 
 # Use git to update version information
@@ -20,9 +20,11 @@ configure_file ("include/${PROJECT_NAME}/version.h" "include/${PROJECT_NAME}/ver
 # Start a list of targets to be built
 set (TARGETS)
 
-#[==[
+#[===========================================================================[
   Main project target: Shared library
-]==]
+]===========================================================================]#
+
+message (STATUS "Building base64 library")
 
 # Add our headers to a list
 set (HEADERS)
@@ -71,9 +73,9 @@ target_sources (${PROJECT_NAME} PRIVATE ${SOURCE_FILES})
 # Add the target to the list
 list (APPEND TARGETS ${PROJECT_NAME})
 
-#[==[
+#[===========================================================================[
   Optional target: NodeJs C++ Addon (requires building from 'npm run build')
-]==]
+]===========================================================================]#
 if (-DBUILDING_NODE_EXTENSION IN_LIST CMAKE_CXX_FLAGS)
   # Include Node-API headers
   include (GetNodeAPIHeaders)
@@ -105,9 +107,10 @@ if (-DBUILDING_NODE_EXTENSION IN_LIST CMAKE_CXX_FLAGS)
   list (APPEND TARGETS addon)
 endif ()
 
-#[==[
+#[===========================================================================[
   Command Line Interface
-]==]
+]===========================================================================]#
+message (STATUS "Building command line interface")
 configure_file ("include/${PROJECT_NAME}/cli.hpp" "include/${PROJECT_NAME}/cli.hpp")
 add_library (cli SHARED)
 add_library (${PROJECT_NAME}::cli ALIAS cli)
@@ -128,10 +131,10 @@ target_sources (cli PRIVATE "src/${PROJECT_NAME}/cli.cpp")
 target_link_libraries (cli ${PROJECT_NAME}::${PROJECT_NAME})
 list (APPEND TARGETS cli)
 
-#[==[
+#[===========================================================================[
   Executable target: Main
-]==]
-# Create an exectable for testing
+]===========================================================================]#
+message (STATUS "Building executable")
 add_executable (main)
 add_executable (${PROJECT_NAME}::main ALIAS main)
 target_sources (main PRIVATE "src/main.cpp")
@@ -146,9 +149,9 @@ set_target_properties (main
 )
 list (APPEND TARGETS main)
 
-#[==[
+#[===========================================================================[
   Export this configuration to share it with other CMake projects
-]==]
+]===========================================================================]#
 
 # Collect and export targets
 set (${PROJECT_NAME}_TARGETS ${TARGETS} CACHE STRING "Targets to be built." FORCE)
@@ -163,8 +166,8 @@ export (
 include (CMakePackageConfigHelpers)
 
 include (JoinPaths)
-join_paths (libdir_for_pc_file "\${exec_prefix}" "${CMAKE_INSTALL_LIBDIR}")
-join_paths (includedir_for_pc_file "\${prefix}" "${CMAKE_INSTALL_INCLUDEDIR}")
+join_paths (libdir_for_pc_file     "\${exec_prefix}" "${CMAKE_INSTALL_LIBDIR}")
+join_paths (includedir_for_pc_file "\${prefix}"      "${CMAKE_INSTALL_INCLUDEDIR}")
 
 # Create package config file
 configure_file (
