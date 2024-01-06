@@ -111,29 +111,29 @@ Napi::Value Encode(const Napi::CallbackInfo& info)
 /**
  * @brief
  *
- * @param info
+ * @param args
  * @return Napi::Value
  */
-Napi::Value Decode(const Napi::CallbackInfo& info)
+Napi::Value Decode(const Napi::CallbackInfo& args)
 {
-  Napi::Env env = info.Env();
+  Napi::Env env = args.Env();
 
   // Arguments required: at least one, and no more than two
-  if (info.Length() < 1)
+  if (args.Length() < 1)
   {
     Napi::TypeError::New(env, "Wrong number of arguments").ThrowAsJavaScriptException();
     return env.Null();
   }
 
   // Param 1 must be the string to encode
-  if (!info[0].IsString())
+  if (!args[0].IsString())
   {
     Napi::TypeError::New(env, "Wrong arguments").ThrowAsJavaScriptException();
     return env.Null();
   }
 
   // Param 2 (if any) must be boolean. If unset, non-URL alphabet is used.
-  if (!info[1].IsBoolean() && info.Length() > 1)
+  if (!args[1].IsBoolean() && args.Length() > 1)
   {
     Napi::TypeError::New(env, "Wrong arguments").ThrowAsJavaScriptException();
     return env.Null();
@@ -144,17 +144,18 @@ Napi::Value Decode(const Napi::CallbackInfo& info)
 
   // Set whether to use the URL alphabet or not...
   // If an option was passed, use it. Else, set to 'false'.
-  bool urlMode = info[1] != NULL ? info[1] : false;
+  bool urlMode = args[1] != NULL ? args[1] : false;
 
   try {
     // Try to decode the string
-    decodedArg = base64::decode(info[0].As<Napi::String>(), urlMode);
+    Napi::String str(env, args[0].ToString());
+    decodedArg = base64::decode(str, urlMode);
   } catch (const std::exception &x) {
     // If there was an error...
     std::string message(x.what());
     message += '\n';
     message += "base64: could not decode the following input argument:\n";
-    message += info[0].As<Napi::String>();
+    message += args[0].As<Napi::String>();
     // Throw a javascript-side exception
     Napi::TypeError::New(env, message).ThrowAsJavaScriptException();
     message.clear();
@@ -173,7 +174,7 @@ Napi::Value Decode(const Napi::CallbackInfo& info)
     std::string message(x.what());
     message += '\n';
     message += "base64: could not construct the decoded argument into a string:\n";
-    message += info[0].As<Napi::String>();
+    message += args[0].As<Napi::String>();
     // Throw a javascript-side exception
     Napi::TypeError::New(env, message).ThrowAsJavaScriptException();
     // Clear the old array
