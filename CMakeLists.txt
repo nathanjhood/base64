@@ -158,7 +158,7 @@ list (APPEND TARGETS cli)
 message (STATUS "Building executable")
 add_executable (main)
 add_executable (${PROJECT_NAME}::main ALIAS main)
-target_sources (main PRIVATE "src/main.cpp")
+target_sources (main PRIVATE "src/${PROJECT_NAME}/main.cpp")
 target_link_libraries (main ${PROJECT_NAME}::${PROJECT_NAME} cli)
 set_target_properties (main
   PROPERTIES
