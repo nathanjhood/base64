@@ -434,17 +434,6 @@ $ ./build/bin/base64 icon__32x32.png
 ...
 ```
 
-<s>Optionally, try running the tests *(coming soon)*:
-
-```.sh
-$ cmake --test build
-```
-Install base64 *(coming soon)*:
-```.sh
-$ cmake --install build
-```
-</s>
-
 ## Hacking
 
 ### Trying to build the NodeJs addon manually?
@@ -495,13 +484,13 @@ The above is the primary reason why I have adapted a C++ base64 implementation, 
 
 Currently working on adding the standard CLI flags (```--version```, ```--help```, ```--verbose```, etc) but without depending on ```getopt``` or any C library. Also enhancing the CLI switch argument for the different modes (encode, decode, possibly a 'diff' mode for testing, debugging, etc). Furthermore, colorization line numbers and line ending chars is already in the codebase, but will need a bit of system-detection logic to ensure that the end-user's terminal actually [supports colourized output](https://linux.die.net/man/5/terminfo). Finally, the CLI should also accept strings passed in as arguments, in place of any input file, if a certain flag is used.
 
-The CLI compiles into a shared library that the executable links with; this should probably be amended such that the CLI only gets baked into the executable and is not compiled into a seperate library, because the CLI is really part of the executable, *not* part of the base64 implementation, and is not really intended to be shared with other code.
+The CLI compiles into a static library that the executable links with; this should probably be amended such that the CLI only gets baked into the executable and is not compiled into a seperate library, because the CLI is really part of the executable, *not* part of the base64 implementation; it is not really intended to be shared with other code, besides ```main()```.
 
 Windows support depends on defining a 'wmain()' entry in place of the usual 'main()', and parsing support for ```w_char``` type. Flags are sometimes prepended with a ```/``` instead of a ```-``` - depending on how much Windows integration is required. Many command line executables running on Windows terminals do accept the usual UNIX-style argument syntax, these days.
 
-<i>PLEASE NOTE: This project should not really be installed system-wide nor placed in your operating system's ```PATH```, due to the naming conflict with the actual system-level base64 implementation.
+*PLEASE NOTE: This project should not really be installed system-wide nor placed in your operating system's ```PATH```, due to the naming conflict with the actual system-level base64 implementation.*
 
-Due to this, and also some interest in implementing further encode/decode algorithms as well as implementing the entire package as NodeJs binary addons, this project will likely either be renamed, or deprecated in favor of a larger, more realized project.</i>
+*Due to this, and also some interest in implementing further encode/decode algorithms as well as implementing the entire package as NodeJs binary addons, this project will likely either be renamed, or deprecated in favor of a larger, more realized project.*
 
 ## Thanks for reading!
 

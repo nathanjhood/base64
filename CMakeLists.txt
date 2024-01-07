@@ -34,7 +34,7 @@ list (APPEND HEADERS
 
 # Add out sources to a list
 set (SOURCE_FILES)
-file (GLOB SOURCE_FILES
+list (APPEND SOURCE_FILES
   "src/${PROJECT_NAME}/${PROJECT_NAME}.cpp"
 )
 
@@ -65,6 +65,27 @@ target_include_directories (${PROJECT_NAME}
   PUBLIC
     $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
     $<INSTALL_INTERFACE:include>
+)
+
+# Create a fileset of 'header' type as part of the library
+target_sources (${PROJECT_NAME}
+
+  PUBLIC
+
+    FILE_SET ${PROJECT_NAME}_PUBLIC_HEADERS
+    TYPE HEADERS
+    BASE_DIRS
+        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+    FILES
+        # include/base64/base64.hpp
+        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}/${PROJECT_NAME}.hpp>
+        $<INSTALL_INTERFACE:include/${PROJECT_NAME}/${PROJECT_NAME}.h>
+
+        # include/base64/version.h
+        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}/version.h>
+        $<INSTALL_INTERFACE:include/${PROJECT_NAME}/version.h>
+
 )
 
 # Include our sources to be compiled
@@ -112,7 +133,7 @@ endif ()
 ]===========================================================================]#
 message (STATUS "Building command line interface")
 configure_file ("include/${PROJECT_NAME}/cli.hpp" "include/${PROJECT_NAME}/cli.hpp")
-add_library (cli SHARED)
+add_library (cli STATIC)
 add_library (${PROJECT_NAME}::cli ALIAS cli)
 set_target_properties (cli
   PROPERTIES
