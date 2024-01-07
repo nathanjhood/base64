@@ -193,7 +193,7 @@ Both functions also have an additional second parameter, 'urlMode' , which accep
 console.log(base64.encode("=", false));
 console.log(base64.encode("/", false));
 console.log(base64.encode("-", false));
-console.log(base64.encode("_ ", false));
+console.log(base64.encode("_", false));
 
 // encoder mode test - using url alphabet
 console.log(base64.encode("=", true));
@@ -482,9 +482,9 @@ The above is the primary reason why I have adapted a C++ base64 implementation, 
 
 ## Coming soon...
 
-Currently working on adding the standard CLI flags (```--version```, ```--help```, ```--verbose```, etc) but without depending on ```getopt``` or any C library. Also enhancing the CLI switch argument for the different modes (encode, decode, possibly a 'diff' mode for testing, debugging, etc). Furthermore, colorization line numbers and line ending chars is already in the codebase, but will need a bit of system-detection logic to ensure that the end-user's terminal actually [supports colourized output](https://linux.die.net/man/5/terminfo). Finally, the CLI should also accept strings passed in as arguments, in place of any input file, if a certain flag is used.
+Currently working on enhancing the CLI switch argument for the different modes (encode, decode, possibly a 'diff' mode for testing, debugging, etc). Furthermore, colorization and styling of line numbers and line ending chars is already in the codebase, but will need a bit of system-detection logic to ensure that the end-user's terminal actually [supports colourized output](https://linux.die.net/man/5/terminfo). Finally, the CLI should also accept strings passed in as arguments, in place of any input file, if a certain flag is used.
 
-The CLI compiles into a static library that the executable links with; this should probably be amended such that the CLI only gets baked into the executable and is not compiled into a seperate library, because the CLI is really part of the executable, *not* part of the base64 implementation; it is not really intended to be shared with other code, besides ```main()```.
+The CLI is compiled into a static library that the executable is then linked to; this should probably be amended such that the CLI *only* gets baked into the executable and is *not* compiled into a seperate library, because the CLI is really part of the executable, *not* part of the base64 implementation; it is not really intended to be shared with other code, besides ```main()```.
 
 Windows support depends on defining a 'wmain()' entry in place of the usual 'main()', and parsing support for ```w_char``` type. Flags are sometimes prepended with a ```/``` instead of a ```-``` - depending on how much Windows integration is required. Many command line executables running on Windows terminals do accept the usual UNIX-style argument syntax, these days.
 
