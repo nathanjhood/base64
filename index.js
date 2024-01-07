@@ -1,4 +1,4 @@
-const base64 = require("./base64.node");
+const base64 = require("./lib/base64.node");
 
 console.log(base64.hello());
 console.log(base64.version());

@@ -4,13 +4,13 @@
   "main": "index.js",
   "author": "StoneyDSP <nathanjhood@googlemail.com>",
   "license": "MIT",
-  "type": "module",
+
   "scripts": {
     "postinstall": "cmake-js compile",
     "configure": "cmake-js configure",
     "reconfigure": "cmake-js reconfigure",
     "build": "cmake-js build",
-    "postbuild": "cp ./types/base64.node.d.ts ./build/lib/base64.node.d.ts",
+    "postbuild": "cp ./lib/base64.node.d.ts ./build/lib/base64.node.d.ts",
     "rebuild": "cmake-js rebuild",
     "clean": "cmake-js clean",
     "wipe": "cmake-js clean && rm -rvf ./node_modules",
