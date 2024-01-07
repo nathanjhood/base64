@@ -1,3 +1,6 @@
+/**
+ * The 'base64' C++ addon interface.
+ */
 interface base64 {
   /**
    * Returns a string, confirming the module is online.
