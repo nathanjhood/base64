@@ -44,6 +44,7 @@ static bool                           _mode_is_set       = false;
 static std::vector<std::string>       _input_files;
 static bool                           _show_line_numbers = false;
 static bool                           _show_ends         = false;
+static bool                           _show_names        = false;
 
 static bool                           _show_verbose      = false;
 static bool                           _show_version      = false;
@@ -103,6 +104,14 @@ void parse(int argc, char* argv[]) {
           throw std::runtime_error("base64: cannot use -E/--show-ends parameter twice!");
         }
         _show_ends = true;
+        continue;
+      }
+
+      if (arg == "--show-names") {
+        if (_show_names) {
+          throw std::runtime_error("base64: cannot use -E/--show-names parameter twice!");
+        }
+        _show_names = true;
         continue;
       }
 
@@ -235,6 +244,10 @@ int process(int argc, char* argv[]) {
       return EXIT_FAILURE;
     }
 
+    if (base64::cli::show_names()) {
+      std::cout << base64::cli::underline << "File: " << file_name << base64::cli::reset;
+    }
+
     std::string line;
     int         line_count = 1;
 
@@ -279,6 +292,10 @@ bool show_ends() {
 
 bool show_line_numbers() {
   return _show_line_numbers;
+}
+
+bool show_names() {
+  return _show_names;
 }
 
 bool show_verbose() {

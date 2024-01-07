@@ -141,6 +141,14 @@ bool show_line_numbers();
 
 /**
  * @brief
+ *
+ * @return true
+ * @return false
+ */
+bool show_names();
+
+/**
+ * @brief
  * TODO:
  * @return true
  * @return false
