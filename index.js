@@ -1,4 +1,5 @@
 const base64 = require("./lib/base64.node");
+module.exports = base64;
 
 console.log(base64.hello());
 console.log(base64.version());
@@ -30,8 +31,8 @@ console.log(base64.encode(""));
 console.log("\nDecoder test:\n");
 
 // decoder test
-// console.log(base64.decode(""));
-console.log(base64.decode("Zg=="));
+// console.log(base64.decode(""));  // Napi::String doesn't like these, much!
+console.log(base64.decode("Zg==")); // Napi::String doesn't like these, also!
 console.log(base64.decode("Zm8="));
 console.log(base64.decode("Zm9v"));
 console.log(base64.decode("Zm9vYg=="));
@@ -44,7 +45,7 @@ console.log("\nEncoder non-URL alphabet test:\n");
 console.log("= %s", base64.encode("=", false));
 console.log("/ %s", base64.encode("/", false));
 console.log("- %s", base64.encode("-", false));
-console.log("_ %s", base64.encode("_ ", false));
+console.log("_ %s", base64.encode("_", false));
 
 console.log("\nEncoder URL alphabet test:\n");
 console.log("= %s", base64.encode("=", true));
@@ -57,7 +58,7 @@ console.log("\nDecoder non-URL alphabet test:\n");
 console.log("PQ== %s", base64.decode("PQ==", false));
 console.log("Lw== %s", base64.decode("Lw==", false));
 console.log("LQ== %s", base64.decode("LQ==", false));
-console.log("XyA= %s", base64.decode("XyA= ", false));
+console.log("XyA= %s", base64.decode("XyA=", false));
 
 console.log("\nDecoder URL alphabet test:\n");
 console.log("PQ== %s", base64.decode("PQ==", true));
