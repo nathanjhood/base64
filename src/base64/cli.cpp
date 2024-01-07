@@ -28,6 +28,7 @@
  *
  */
 
+#include "base64/version.h"
 #include "base64/cli.hpp"
 #include "base64/base64.hpp"
 
@@ -245,6 +246,12 @@ int process(int argc, char* argv[]) {
     std::cerr << "usage: base64 [OPTION]... [FILE]...\n";
     return EXIT_FAILURE;
   }
+
+  if (base64::cli::show_version()) {
+    std::cout << "base64 v." << base64_VERSION << std::endl;
+    return EXIT_SUCCESS;
+  }
+
 
   if (base64::cli::show_usage()) {
     base64::cli::usage();
