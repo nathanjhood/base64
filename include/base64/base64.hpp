@@ -61,6 +61,10 @@ base64::BYTE to_byte(unsigned char c) {
   return c;
 }
 
+char to_char(base64::BYTE b) {
+  return b;
+}
+
 // static unsigned char to_unsigned_char(char c) {
 //   return c;
 // }

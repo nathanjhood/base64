@@ -74,9 +74,12 @@ Napi::Value Encode(const Napi::CallbackInfo& args)
   bool urlMode = args[1] != NULL ? args[1] : false;
 
   try {
+
     // Try to encode the string
     encodedArg = base64::encode(args[0].ToString(), urlMode);
+
   } catch (const std::exception &x) {
+
     // If there was an error...
     std::string message(x.what());
     message += '\n';
@@ -88,6 +91,7 @@ Napi::Value Encode(const Napi::CallbackInfo& args)
   }
 
   try {
+
     // Construct a Napi string containing the encoder output
     Napi::String out = Napi::String::New(env, encodedArg.data());
 #if !HAS_STRING_VIEW_H
@@ -96,14 +100,25 @@ Napi::Value Encode(const Napi::CallbackInfo& args)
 #endif
     // Return the Napi string
     return out;
+
   } catch (const std::exception &x) {
+
     // If there was an error...
     std::string message(x.what());
     message += '\n';
     message += "base64: could not encode the following input argument:\n";
     message += args[0].As<Napi::String>();
+
+    // Throw a javascript-side exception
     Napi::TypeError::New(env, message).ThrowAsJavaScriptException();
+
+#if !HAS_STRING_VIEW_H
+    // Clear the old string
+    encodedArg.clear();
+#endif
     message.clear();
+
+    // Return null
     return env.Null();
   }
 }
@@ -139,47 +154,62 @@ Napi::Value Decode(const Napi::CallbackInfo& args)
     return env.Null();
   }
 
+  // Construct a string to hold the arg
+  std::string      str(args[0].ToString().Utf8Value());
+  bool urlMode = args[1].ToBoolean().Value();
+
   // Construct a fancy char array to hold the decoder's output
   std::vector<base64::BYTE> decodedArg;
 
-  // Set whether to use the URL alphabet or not...
-  // If an option was passed, use it. Else, set to 'false'.
-  bool urlMode = args[1] != NULL ? args[1] : false;
-
   try {
-    // Try to decode the string
-    Napi::String str(env, args[0].ToString());
+
     decodedArg = base64::decode(str, urlMode);
+
   } catch (const std::exception &x) {
+
     // If there was an error...
     std::string message(x.what());
     message += '\n';
     message += "base64: could not decode the following input argument:\n";
     message += args[0].As<Napi::String>();
+
     // Throw a javascript-side exception
     Napi::TypeError::New(env, message).ThrowAsJavaScriptException();
+
+    // Clear the old array
+    decodedArg.clear();
     message.clear();
+
+    // Return null
     return env.Null();
   }
 
   try {
+
     // Try to construct a Napi string containing the decoder output
-    Napi::String out = Napi::String::New(env, reinterpret_cast<const char *>(decodedArg.data()));
+    Napi::String out = Napi::String::New(env, std::string(decodedArg.begin(), decodedArg.end()));
+
     // Clear the old array
     decodedArg.clear();
+
     // Return the string
     return out;
+
   } catch (const std::exception &x) {
+
     // If there was an error...
     std::string message(x.what());
     message += '\n';
     message += "base64: could not construct the decoded argument into a string:\n";
     message += args[0].As<Napi::String>();
+
     // Throw a javascript-side exception
     Napi::TypeError::New(env, message).ThrowAsJavaScriptException();
+
     // Clear the old array
     decodedArg.clear();
     message.clear();
+
     // Return null
     return env.Null();
   }
@@ -225,16 +255,7 @@ NODE_API_MODULE(base64, Init) // (name to use, initializer to use)
 
 // Here, we can extend the base64 source file with Napi overloads.
 
-// /**
-//  * @brief
-//  *
-//  * @param s
-//  * @return std::string
-//  */
-// std::string encode(const Napi::String& s) {
-//   return base64::_encode<Napi::String>(s.As<std::string>());
-// }
-// template std::string base64::encode(const Napi::String& s);
+
 
 } // namespace base64
 
