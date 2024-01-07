@@ -6,6 +6,7 @@
   "license": "MIT",
 
   "scripts": {
+    "preinstall": "cmake-js install",
     "postinstall": "cmake-js compile",
     "configure": "cmake-js configure",
     "reconfigure": "cmake-js reconfigure",
