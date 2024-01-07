@@ -252,6 +252,10 @@ int process(int argc, char* argv[]) {
     return EXIT_SUCCESS;
   }
 
+  if (base64::cli::show_help()) {
+    std::cout << "usage: base64 [OPTION]... [FILE]..." << std::endl;
+    return EXIT_SUCCESS;
+  }
 
   if (base64::cli::show_usage()) {
     base64::cli::usage();
@@ -280,15 +284,15 @@ int process(int argc, char* argv[]) {
     switch(base64::cli::get_mode())
     {
       case base64::cli::ENCODE:
-      status = encode(input_file, line, line_count, file_name);
+      status = base64::cli::encode(input_file, line, line_count, file_name);
       break;
 
       case base64::cli::DECODE:
-      status = decode(input_file, line, line_count, file_name);
+      status = base64::cli::decode(input_file, line, line_count, file_name);
       break;
 
       default:
-      status = encode(input_file, line, line_count, file_name);
+      status = base64::cli::encode(input_file, line, line_count, file_name);
       break;
     }
 
