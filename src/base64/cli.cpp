@@ -59,7 +59,7 @@ static bool                           _show_usage        = false;
 
 void parse(int argc, char* argv[]) {
 
-  if (argc < 1) {
+  if (argc < 2) {
     throw std::runtime_error("base64: missing input parameters!");
   }
 
