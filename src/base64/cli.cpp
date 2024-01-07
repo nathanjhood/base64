@@ -49,6 +49,12 @@ static bool                           _show_names        = false;
 static bool                           _show_verbose      = false;
 static bool                           _show_version      = false;
 static bool                           _show_help         = false;
+static bool                           _show_usage        = false;
+
+#define base64_GAP_40 std::setw(40) << std::setfill(' ')
+
+#define base64_USAGE_LINE(args, info) \
+  std::cout << base64_GAP_40 << args << "  "; std::cout << info << std::endl;
 
 void parse(int argc, char* argv[]) {
 
@@ -130,6 +136,14 @@ void parse(int argc, char* argv[]) {
         }
         base64::cli::set_mode(base64::cli::DECODE);
         _mode_is_set = true;
+        continue;
+      }
+
+      if (arg == "--usage") {
+        if (_show_usage) {
+          throw std::runtime_error("base64: cannot use --show-usage parameter twice!");
+        }
+        _show_usage = true;
         continue;
       }
     }
@@ -228,8 +242,13 @@ int process(int argc, char* argv[]) {
     base64::cli::parse(argc, argv);
   } catch (const std::exception &x) {
     std::cerr << x.what() << '\n';
-    std::cerr << "usage: base64 [-n|--number] [-E|--show-ends] <input_file> ...\n";
+    std::cerr << "usage: base64 [OPTION]... [FILE]...\n";
     return EXIT_FAILURE;
+  }
+
+  if (base64::cli::show_usage()) {
+    base64::cli::usage();
+    return EXIT_SUCCESS;
   }
 
   // Return the files that were passed in to 'parse()'
@@ -308,6 +327,23 @@ bool show_version() {
 
 bool show_help() {
   return _show_help;
+}
+
+bool show_usage() {
+  return _show_usage;
+}
+
+void usage() {
+  std::cout << "usage: base64 [OPTION]... [FILE]..." << std::endl;
+  std::cout << "" << std::endl;
+  std::cout << "Options:" << std::endl;
+  std::cout << "" << std::endl;
+  base64_USAGE_LINE("[-n|--number|--show-lines]", "Show line numbers in output.")
+  base64_USAGE_LINE("[-E|--show-ends]",           "Show line endings in output (as '$').")
+  base64_USAGE_LINE("[--show-names]",             "Show file names in output.")
+  base64_USAGE_LINE("[-v|--version]",             "Show program version and exit.")
+  base64_USAGE_LINE("[-h|--help]",                "Show program commands and exit.")
+  base64_USAGE_LINE("[--usage]",                  "Show program options and exit.")
 }
 
 } // namespace base64

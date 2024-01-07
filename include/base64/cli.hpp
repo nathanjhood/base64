@@ -171,6 +171,20 @@ bool show_version();
  */
 bool show_help();
 
+/**
+ * @brief
+ *
+ * @return true
+ * @return false
+ */
+bool show_usage();
+
+/**
+ * @brief
+ *
+ */
+void usage();
+
 } // namespace commands
 } // namespace base64
 
