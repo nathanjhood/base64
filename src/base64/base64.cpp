@@ -164,7 +164,14 @@ static std::vector<base64::BYTE> _decode(const Str& encoded_string, bool url) {
 
   std::string base64_alphabet(base64::alphabet[url]);
 
-  while (in_len-- && (encoded_string[in_] != '=') && is_base64(encoded_string[in_])) {
+  bool is_base64_ = false;
+  if (url) {
+    is_base64_ = is_base64_url(encoded_string[in_]);
+  } else {
+    is_base64_ = is_base64    (encoded_string[in_]);
+  }
+
+  while (in_len-- && (encoded_string[in_] != '=') && is_base64_) {
 
     index[i++] = encoded_string[in_];
     in_++;
