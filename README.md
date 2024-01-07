@@ -149,12 +149,12 @@ $ yarn && yarn start
 
 The above commands will build the NodeJs module from source, then execute the contents of ```index.js``` which serves as a demonstration.
 
-Currently the NodeJS binary module implements both the ```encode()``` and ```decode()``` functions, which are exported from ```base64.cjs```. <b>Since the file input parsing is currently a part of the CLI implementation, the NodeJS module parses input strings, not files</b>. Just import/require ```base64``` from this file, and call the functions:
+Currently the NodeJS binary module implements both the ```encode()``` and ```decode()``` functions, which are exported from ```lib/base64.node.js```. <b>Since the file input parsing is currently a part of the CLI implementation, the NodeJS module parses input strings, not files</b>. Just import/require ```base64``` from this file, and call the functions:
 
 ```.js
 // index.js
 
-import base64 from './base64.cjs'
+const base64 = require("./lib/base64.node");
 ...
 
 console.log(base64.encode(""));
@@ -169,7 +169,7 @@ console.log(base64.encode(""));
 ...
 ```
 
-Run ```node ./index.js``` to execute the test script:
+Run ```node ./test/index.js``` to execute the test script:
 
 ```
 ...
