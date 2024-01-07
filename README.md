@@ -9,7 +9,7 @@ $ base64 [OPTIONS] [FILE]...
 Base64 encode/decode functions in NodeJs.
 
 ```.js
-import base64 from './base64.cjs'
+import base64 from "@nathanjhood/base64";
 
 console.log(base64.encode("foobar"));
 ```
@@ -210,6 +210,23 @@ $ npm run base64 --encode --show-lines tst.txt
 // or...
 
 $ yarn base64 --encode --show-lines tst.txt
+```
+
+You may also simply add this project to your NodeJs package dependencies and import/require it to use the module:
+
+```.sh
+$ npm install https://github.com/nathanjhood/base64 --save
+
+// or
+
+$ yarn add https://github.com/nathanjhood/base64
+```
+
+```.js
+import base64 from "@nathanjhood/base64";
+
+console.log(base64.encode("foobar"));
+...
 ```
 
 ## Goals
