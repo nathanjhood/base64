@@ -5,10 +5,6 @@
   "author": "StoneyDSP <nathanjhood@googlemail.com>",
   "license": "MIT",
   "type": "module",
-  "types": "./types/base64.d.ts",
-  "exports": {
-    "base64": "./base64.cjs"
-  },
   "scripts": {
     "postinstall": "cmake-js compile",
     "configure": "cmake-js configure",
@@ -22,7 +18,9 @@
 
     "base64": "./build/bin/base64",
     "base64:encode": "./build/bin/base64 --encode",
-    "base64:decode": "./build/bin/base64 --decode"
+    "base64:decode": "./build/bin/base64 --decode",
+
+    "build:ts": "tsc"
   },
   "dependencies": {
     "clang-format": "^1.8.0",

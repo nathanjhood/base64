@@ -1,4 +1,4 @@
-const base64 = require("./base64.node");
+import base64 = require("./base64.node");
 
 console.log(base64.hello());
 console.log(base64.version());
@@ -39,6 +39,7 @@ console.log(base64.decode("Zm9vYmE="));
 console.log(base64.decode("Zm9vYmFy"));
 // console.log(base64.decode(""));
 
+
 // encoder mode test
 console.log("\nEncoder non-URL alphabet test:\n");
 console.log("= %s", base64.encode("=", false));
@@ -51,6 +52,7 @@ console.log("= %s", base64.encode("=", true));
 console.log("/ %s", base64.encode("/", true));
 console.log("- %s", base64.encode("-", true));
 console.log("_ %s", base64.encode("_", true));
+
 
 // decoder mode test
 console.log("\nDecoder non-URL alphabet test:\n");
