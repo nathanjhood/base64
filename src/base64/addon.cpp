@@ -70,8 +70,7 @@ Napi::Value Encode(const Napi::CallbackInfo& args)
 #endif
 
   // Set whether to use the URL alphabet or not...
-  // If an option was passed, use it. Else, set to 'false'.
-  bool urlMode = args[1] != NULL ? args[1] : false;
+  bool urlMode = args[1].ToBoolean().Value();
 
   try {
 
@@ -85,8 +84,17 @@ Napi::Value Encode(const Napi::CallbackInfo& args)
     message += '\n';
     message += "base64: could not encode the following input argument:\n";
     message += args[0].As<Napi::String>();
+
+    // Throw a javascript-side exception
     Napi::TypeError::New(env, message).ThrowAsJavaScriptException();
+
+#if !HAS_STRING_VIEW_H
+    // Clear the old string
+    encodedArg.clear();
+#endif
     message.clear();
+
+    // Return null
     return env.Null();
   }
 
@@ -98,6 +106,7 @@ Napi::Value Encode(const Napi::CallbackInfo& args)
     // Clear the old string
     encodedArg.clear();
 #endif
+
     // Return the Napi string
     return out;
 
