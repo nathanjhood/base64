@@ -96,15 +96,16 @@ static std::string _encode(Str s, bool url = false)
 
 std::string encode(const base64::BYTE* buf, unsigned int bufLen, bool url) {
 
+  size_t outLen = (bufLen + 2) / 3 * 4;
   std::string out;
+  out.reserve(outLen);
+
   int i = 0;
   int j = 0;
   base64::BYTE stream[3];
   base64::BYTE index[4];
 
   const char* base64_alphabet_ = base64::alphabet[url];
-
-  out.reserve(bufLen);
 
   while (bufLen--) {
 
@@ -132,8 +133,9 @@ std::string encode(const base64::BYTE* buf, unsigned int bufLen, bool url) {
     index[2] = base64_alphabet_[((to_unsigned_char(stream[1]) << 2) + ( to_unsigned_char(stream[2]) >> 6)) & 0x3f];
     index[3] = base64_alphabet_[  to_unsigned_char(stream[2])                                              & 0x3f];
 
-    for (j = 0; (j < i + 1); j++)
+    for (j = 0; (j < i + 1); j++) {
       out += index[j];
+    }
 
     while((i++ < 3))
       out += '=';
@@ -153,14 +155,16 @@ template <typename Str>
  */
 static std::vector<base64::BYTE> _decode(const Str& encoded_string, bool url) {
 
-  std::vector<base64::BYTE> out;
   int i = 0;
   int j = 0;
   int in_ = 0;
   int in_len = encoded_string.size();
   base64::BYTE index[4];
   base64::BYTE stream[3];
-  out.reserve(in_len);
+
+  std::size_t approx_length_of_decoded_string = in_len / 4 * 3;
+  std::vector<base64::BYTE> out;
+  out.reserve(approx_length_of_decoded_string);
 
   std::string base64_alphabet(base64::alphabet[url]);
 
