@@ -1,4 +1,4 @@
-# Base64
+# base64
 
 Base64 encode/decode CLI in C++.
 
