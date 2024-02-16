@@ -68,3 +68,17 @@ console.log("Xw== %s", base64.decode("Xw==", true));
 // encode/decode test
 console.log("\nStress test: encode/decode\n");
 console.log(base64.decode(base64.encode("foobar")));
+
+
+const fs = require('fs');
+
+// Calling the readFileSync() method
+// to read 'input.txt' file
+const data = fs.readFileSync('./tst.txt',
+    { encoding: 'base64', flag: 'r' });
+
+// Display the file data
+console.log(base64.decode(data));
+
+console.log(base64.get_node_version());
+console.log(base64.get_napi_version());
