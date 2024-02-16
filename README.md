@@ -23,7 +23,6 @@ console.log(base64.encode("foobar"));
 - [Examples](https://github.com/nathanjhood/base64/tree/main#examples)
 - [About](https://github.com/nathanjhood/base64/tree/main#about)
 - [Build from source](https://github.com/nathanjhood/base64/tree/main#build-from-source)
-- [Hacking](https://github.com/nathanjhood/base64/tree/main#hacking)
 - [Coming Soon](https://github.com/nathanjhood/base64/tree/main#coming-soon)
 - [Acknowledgments](https://github.com/nathanjhood/base64/tree/main#acknowledgments)
 
@@ -450,52 +449,6 @@ $ ./build/bin/base64 icon__32x32.png
 # output should appear...
 ...
 ```
-
-## Hacking
-
-### Trying to build the NodeJs addon manually?
-
-When building this project from the npm/yarn command, the package 'cmake-js' is invoked, which reads from the same build script (```CMakeLists.txt```) as the CMake CLI does. However, cmake-js also passes an argument equivalent to ```-DCMAKE_CXX_FLAGS:STRING=-DBUILDING_NODE_EXTENSION```, which is used in the build script to detect that we are also building the node addon part of the script. You may also pass the above arg manually when building with CMake directly on the command line, as long as you have already done ```npm install```or ```yarn``` to acquire these headers; they should be found in the usual ```node_modules``` folder at the project root. Note that the entire 'addon.cpp' is guarded by requiring ```napi.h``` to be found and ```BUILDING_NODE_EXTENSION``` to be defined. See the next section if you can't find ```napi.h```.
-
-### "Where is 'napi.h'?"
-
-When building the NodeJS addon, your IDE might not find the ```<napi.h>``` file, even when building successfully. The file(s) you need should be in the ```node_modules``` directory, under ```node-api-headers/include``` (C headers for NodeJs) and ```node-addon-api``` (C++ headers which wrap the C headers)\*. The build script(s) will pick them up automatically, but your IDE might not. You just need to add these two directories appropriately to your IDE's intellisense engine path.
-
-VSCode with C++ extension example:
-
-```.json
-// .vscode/c_cpp_properties.json
-{
-  "configurations": [
-    {
-      "name": "Linux",
-      "includePath": [
-        "${workspaceFolder}/**",
-        "node_modules/node-addon-api",
-        "node_modules/node-api-headers/include"
-      ],
-      "defines": [],
-      "compilerPath": "/usr/bin/g++",
-      "cStandard": "c17",
-      "cppStandard": "c++14",
-      "intelliSenseMode": "linux-gcc-x64",
-      "configurationProvider": "ms-vscode.cmake-tools"
-    }
-  ],
-  "version": 4
-}
-
-```
-
-\*Important distinction: ```<napi.h>``` is the C++ addon header, and is ABI-stable.
-
-### Node versions, nvm, and ABI stability
-
-If you are using nvm (node version manager), or have different Node installations on your system, Node addons written using the Node C headers will complain that the Node version used during build is different to the one attempting to run the built module. The C++ addon header provides an ABI stability promise, which circumvents this issue.
-
-When choosing to build an addon using the Node C headers directly, you must build against the same Node version that you intend to run on.
-
-The above is the primary reason why I have adapted a C++ base64 implementation, instead of a more common C implementation (such as GNU); you should not experience any issues with differing Node versions and nvm when building this project, thanks to the Node C++ addon's ABI stability.
 
 ## Coming soon...
 
