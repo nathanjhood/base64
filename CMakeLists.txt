@@ -98,33 +98,45 @@ list (APPEND TARGETS ${PROJECT_NAME})
   Optional target: NodeJs C++ Addon (requires building from 'npm run build')
 ]===========================================================================]#
 if (-DBUILDING_NODE_EXTENSION IN_LIST CMAKE_CXX_FLAGS)
-  # Include Node-API headers
-  include (GetNodeAPIHeaders)
-  # Include Node-API wrappers
-  include (GetNodeAPIWrappers)
-  message (STATUS "Building NodeJs addon")
-  add_library (addon SHARED)
-  add_library (${PROJECT_NAME}::addon ALIAS addon)
-  target_include_directories (addon
-    PUBLIC
-      $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
-      $<INSTALL_INTERFACE:include>
+  # # Include Node-API headers
+  # include (GetNodeAPIHeaders)
+  # # Include Node-API wrappers
+  # include (GetNodeAPIWrappers)
+  # message (STATUS "Building NodeJs addon")
+  # add_library (addon SHARED)
+  # add_library (${PROJECT_NAME}::addon ALIAS addon)
+  # target_include_directories (addon
+  #   PUBLIC
+  #     $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
+  #     $<INSTALL_INTERFACE:include>
+  # )
+  # target_include_directories (addon PRIVATE ${CMAKE_JS_INC})
+  # target_sources (addon PRIVATE "src/${PROJECT_NAME}/addon.cpp" ${CMAKE_JS_SRC})
+  # target_link_libraries (addon ${PROJECT_NAME} ${CMAKE_JS_LIB})
+  # set_target_properties (addon
+  #   PROPERTIES
+  #   LIBRARY_OUTPUT_NAME "${PROJECT_NAME}"
+  #   PREFIX ""
+  #   SUFFIX ".node"
+  #   ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+  #   LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+  #   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+  # )
+  # if (MSVC AND CMAKE_JS_NODELIB_DEF AND CMAKE_JS_NODELIB_TARGET)
+  #   execute_process (COMMAND ${CMAKE_AR} /def:${CMAKE_JS_NODELIB_DEF} /out:${CMAKE_JS_NODELIB_TARGET} ${CMAKE_STATIC_LINKER_FLAGS})
+  # endif ()
+
+  include (CMakeJS)
+
+  cmakejs_create_napi_addon (
+    addon
+    "src/${PROJECT_NAME}/addon.cpp"
+    NAMESPACE Base64
+    ALIAS Base64
   )
-  target_include_directories (addon PRIVATE ${CMAKE_JS_INC})
-  target_sources (addon PRIVATE "src/${PROJECT_NAME}/addon.cpp" ${CMAKE_JS_SRC})
-  target_link_libraries (addon ${PROJECT_NAME} ${CMAKE_JS_LIB})
-  set_target_properties (addon
-    PROPERTIES
-    LIBRARY_OUTPUT_NAME "${PROJECT_NAME}"
-    PREFIX ""
-    SUFFIX ".node"
-    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
-  )
-  if (MSVC AND CMAKE_JS_NODELIB_DEF AND CMAKE_JS_NODELIB_TARGET)
-    execute_process (COMMAND ${CMAKE_AR} /def:${CMAKE_JS_NODELIB_DEF} /out:${CMAKE_JS_NODELIB_TARGET} ${CMAKE_STATIC_LINKER_FLAGS})
-  endif ()
+
+  set_target_properties(addon PROPERTIES LIBRARY_OUTPUT_NAME "base64")
+
   list (APPEND TARGETS addon)
 endif ()
 
@@ -211,3 +223,9 @@ write_basic_package_version_file (
 	VERSION ${PROJECT_VERSION}
 	COMPATIBILITY AnyNewerVersion
 )
+
+if(TRUE) # BUILD_TESTS
+  # include(CTest) # If you want to see all the test dashboard targets, uncomment this
+  enable_testing()
+  include("${CMAKE_CURRENT_LIST_DIR}/tests/base64/tests.cmake")
+endif()
