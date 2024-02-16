@@ -16,6 +16,12 @@
 #include "base64/base64.hpp"
 
 #include <napi.h>
+#include <iostream>
+
+#ifndef STRINGIFY
+# define STRINGIFY_HELPER(n) #n
+# define STRINGIFY(n) STRINGIFY_HELPER(n)
+#endif
 
 namespace base64 {
 
@@ -23,12 +29,32 @@ namespace addon {
 
 Napi::Value Hello(const Napi::CallbackInfo& info)
 {
-  return Napi::String::New(info.Env(), "base64 is online!");
+  return Napi::String::New(info.Env(), STRINGIFY(CMAKEJS_ADDON_NAME)".node is online!");
 }
 
 Napi::Value Version(const Napi::CallbackInfo& info)
 {
   return Napi::String::New(info.Env(), base64_VERSION);
+}
+
+Napi::Value GetNodeVersion(const Napi::CallbackInfo& info)
+{
+  Napi::Env e = info.Env();
+  auto node_version = Napi::VersionManagement::GetNodeVersion(e);
+
+  std::string nodev = node_version->release + node_version->major + node_version->minor + node_version->patch;
+
+  return Napi::String::New(e, nodev.data());
+}
+
+Napi::Value GetNapiVersion(const Napi::CallbackInfo& info)
+{
+  // Napi::Env e = info.Env();
+  // auto napi_version = Napi::VersionManagement::GetNapiVersion(e);
+
+  // std::cout << "napi v" << napi_version << std::endl;
+
+  return Napi::Number::New(info.Env(), NAPI_VERSION);
 }
 
 /**
@@ -240,6 +266,16 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   );
 
   exports.Set(
+    Napi::String::New(env, "get_node_version"),
+    Napi::Function::New(env, GetNodeVersion)
+  );
+
+    exports.Set(
+    Napi::String::New(env, "get_napi_version"),
+    Napi::Function::New(env, GetNapiVersion)
+  );
+
+  exports.Set(
     Napi::String::New(env, "encode"),
     Napi::Function::New(env, Encode)
   );
@@ -264,7 +300,40 @@ NODE_API_MODULE(base64, Init) // (name to use, initializer to use)
 
 // Here, we can extend the base64 source file with Napi overloads.
 
+// /**
+//  * @brief
+//  *
+//  * @param s
+//  * @return std::string
+//  */
+// std::string encode(const Napi::String& s) {
+//   return base64::_encode<Napi::String>(s.As<std::string>());
+// }
+// template std::string base64::encode(const Napi::String& s);
 
+// /**
+//  * @brief
+//  *
+//  * @param s
+//  * @return std::vector<base64::BYTE>
+//  */
+// std::vector<base64::BYTE> decode(const Napi::String& s) {
+//   return base64::_decode<Napi::String>(s.As<std::string>());
+// }
+// template std::vector<base64::BYTE> base64::decode(const Napi::String& s);
+
+// Napi::String byte_vector_to_napi_string(const std::vector<base64::BYTE>& b) {
+
+//   auto in = (const char *)b.data();
+//   Napi::String out;
+
+//   return out;
+// }
+
+// static std::vector<base64::BYTE> napi_string_to_byte_vector(const Napi::String& s) {
+//   std::vector<base64::BYTE> out;
+//   return out;
+// }
 
 } // namespace base64
 
